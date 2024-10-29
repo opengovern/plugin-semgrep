@@ -4,8 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	types3 "github.com/aws/aws-sdk-go-v2/service/route53domains/types"
 	"strings"
+
+	types3 "github.com/aws/aws-sdk-go-v2/service/route53domains/types"
 
 	"github.com/aws/aws-sdk-go-v2/service/route53domains"
 	"github.com/aws/smithy-go"
@@ -15,7 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/aws/aws-sdk-go-v2/service/route53resolver"
 	resolvertypes "github.com/aws/aws-sdk-go-v2/service/route53resolver/types"
-	"github.com/opengovern/og-aws-describer/aws/model"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 func Route53HealthCheck(ctx context.Context, cfg aws.Config, stream *StreamSender) ([]Resource, error) {

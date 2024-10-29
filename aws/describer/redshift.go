@@ -4,15 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	types2 "github.com/aws/aws-sdk-go-v2/service/redshiftserverless/types"
 	"strings"
+
+	types2 "github.com/aws/aws-sdk-go-v2/service/redshiftserverless/types"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/redshift/types"
 	"github.com/aws/aws-sdk-go-v2/service/redshiftserverless"
 	"github.com/aws/smithy-go"
-	"github.com/opengovern/og-aws-describer/aws/model"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 func RedshiftCluster(ctx context.Context, cfg aws.Config, stream *StreamSender) ([]Resource, error) {

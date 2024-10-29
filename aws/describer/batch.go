@@ -2,12 +2,13 @@ package describer
 
 import (
 	"context"
+
 	"github.com/aws/aws-sdk-go-v2/service/batch/types"
 	_ "golang.org/x/tools/go/analysis/passes/ctrlflow"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/batch"
-	"github.com/opengovern/og-aws-describer/aws/model"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 func BatchComputeEnvironment(ctx context.Context, cfg aws.Config, stream *StreamSender) ([]Resource, error) {

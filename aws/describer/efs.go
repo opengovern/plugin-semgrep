@@ -3,11 +3,12 @@ package describer
 import (
 	"context"
 	"fmt"
+
 	"github.com/aws/aws-sdk-go-v2/service/efs/types"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/efs"
-	"github.com/opengovern/og-aws-describer/aws/model"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 const (

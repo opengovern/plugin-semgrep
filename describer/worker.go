@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"strings"
 
-	awsmodel "github.com/opengovern/og-aws-describer/aws/model"
-	"github.com/opengovern/og-aws-describer/pkg/steampipe"
+	awsmodel "github.com/opengovern/og-describer-template/aws/model"
+	"github.com/opengovern/og-describer-template/pkg/steampipe"
 
 	"github.com/go-errors/errors"
-	"github.com/opengovern/og-aws-describer/aws"
-	"github.com/opengovern/og-aws-describer/aws/describer"
+	"github.com/opengovern/og-describer-template/aws"
+	"github.com/opengovern/og-describer-template/aws/describer"
 	"github.com/opengovern/og-util/pkg/describe"
 	"github.com/opengovern/og-util/pkg/source"
 	"github.com/opengovern/og-util/pkg/vault"

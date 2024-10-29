@@ -1,7 +1,7 @@
 package aws
 
 import (
-	"github.com/opengovern/og-aws-describer/aws/describer"
+	"github.com/opengovern/og-describer-template/aws/describer"
 	"github.com/opengovern/og-util/pkg/source"
 )
 

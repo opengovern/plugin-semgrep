@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/opengovern/og-aws-describer/aws/model"
 	"math/rand"
 	"os"
 	"sync"
 	"time"
+
+	"github.com/opengovern/og-describer-template/aws/model"
 
 	// AWS SDK for Go V2 packages
 	"github.com/aws/aws-sdk-go-v2/aws"

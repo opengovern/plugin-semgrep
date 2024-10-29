@@ -3,13 +3,14 @@ package describer
 import (
 	"context"
 	"fmt"
-	_ "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"time"
+
+	_ "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodbstreams"
-	"github.com/opengovern/og-aws-describer/aws/model"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 func DynamoDbTable(ctx context.Context, cfg aws.Config, stream *StreamSender) ([]Resource, error) {

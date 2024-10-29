@@ -293,7 +293,7 @@ func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 	// for _, pkg := range []string{
 	// 	"context",
 	// 	"github.com/turbot/steampipe-plugin-sdk/plugin",
-	// 	"github.com/opengovern/og-aws-describer/aws/model",
+	// 	"github.com/opengovern/og-describer-template/aws/model",
 	// 	"github.com/opengovern/og-azure-describer/azure/model",
 	// } {
 	// 	fmt.Fprintf(&buf, "\"%s\"\n", pkg)

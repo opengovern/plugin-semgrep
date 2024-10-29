@@ -2,13 +2,14 @@ package describer
 
 import (
 	"context"
+
 	types2 "github.com/aws/aws-sdk-go-v2/service/docdb/types"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 	_ "google.golang.org/genproto/googleapis/bigtable/admin/cluster/v1"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/docdb"
-	"github.com/opengovern/og-aws-describer/aws/model"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 func DocDBCluster(ctx context.Context, cfg aws.Config, stream *StreamSender) ([]Resource, error) {

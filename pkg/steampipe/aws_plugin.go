@@ -2,21 +2,19 @@ package steampipe
 
 import (
 	"context"
-	"go.uber.org/zap"
 	"strings"
+
+	"go.uber.org/zap"
 
 	"github.com/hashicorp/go-hclog"
 
-	"github.com/opengovern/og-aws-describer/steampipe-plugin-aws/aws"
+	"fmt"
+
+	"github.com/opengovern/og-describer-template/steampipe-plugin-aws/aws"
+	"github.com/opengovern/og-util/pkg/steampipe"
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/context_key"
-)
-
-import (
-	"fmt"
-
-	"github.com/opengovern/og-util/pkg/steampipe"
 )
 
 func buildContext() context.Context {

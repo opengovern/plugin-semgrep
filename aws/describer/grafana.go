@@ -3,10 +3,11 @@ package describer
 import (
 	"context"
 	"fmt"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/grafana"
 	"github.com/aws/aws-sdk-go-v2/service/grafana/types"
-	"github.com/opengovern/og-aws-describer/aws/model"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 func GrafanaWorkspace(ctx context.Context, cfg aws.Config, stream *StreamSender) ([]Resource, error) {

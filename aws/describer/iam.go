@@ -6,15 +6,16 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
 	"github.com/aws/aws-sdk-go-v2/service/organizations"
 	iam2 "github.com/aws/aws-sdk-go/service/iam"
 	"github.com/gocarina/gocsv"
-	"github.com/opengovern/og-aws-describer/aws/model"
-	"strings"
-	"time"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 const (

@@ -1,7 +1,7 @@
 package steampipe
 
 import (
-	"github.com/opengovern/og-aws-describer/pkg/opengovernance-es-sdk"
+	"github.com/opengovern/og-describer-template/pkg/opengovernance-es-sdk"
 )
 
 var awsMap = map[string]string{

@@ -6,14 +6,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"go.uber.org/zap"
 	"sort"
 	"strings"
+
+	"go.uber.org/zap"
 
 	"github.com/aws/smithy-go"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/opengovern/og-aws-describer/aws/describer"
+	"github.com/opengovern/og-describer-template/aws/describer"
 	"github.com/opengovern/og-util/pkg/describe/enums"
 	"github.com/opengovern/og-util/pkg/source"
 )

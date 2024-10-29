@@ -4,15 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/aws/smithy-go"
-	_ "github.com/aws/smithy-go"
 	"strings"
 	"time"
+
+	"github.com/aws/smithy-go"
+	_ "github.com/aws/smithy-go"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
-	"github.com/opengovern/og-aws-describer/aws/model"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 func EC2ElasticIP(ctx context.Context, cfg aws.Config, stream *StreamSender) ([]Resource, error) {

@@ -3,15 +3,16 @@ package describer
 import (
 	"context"
 	"fmt"
-	types3 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing/types"
 	"strings"
 	"time"
+
+	types3 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing/types"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancing"
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2/types"
-	"github.com/opengovern/og-aws-describer/aws/model"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 func ElasticLoadBalancingV2LoadBalancer(ctx context.Context, cfg aws.Config, stream *StreamSender) ([]Resource, error) {

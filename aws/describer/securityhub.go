@@ -3,14 +3,15 @@ package describer
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/securityhub"
 	"github.com/aws/aws-sdk-go-v2/service/securityhub/types"
 	"github.com/aws/smithy-go/middleware"
 	smithyhttp "github.com/aws/smithy-go/transport/http"
-	"github.com/opengovern/og-aws-describer/aws/model"
-	"strconv"
-	"strings"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 func SecurityHubHub(ctx context.Context, cfg aws.Config, stream *StreamSender) ([]Resource, error) {

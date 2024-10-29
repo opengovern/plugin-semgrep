@@ -2,10 +2,11 @@ package describer
 
 import (
 	"context"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/account"
 	"github.com/aws/aws-sdk-go-v2/service/account/types"
-	"github.com/opengovern/og-aws-describer/aws/model"
+	"github.com/opengovern/og-describer-template/aws/model"
 )
 
 func AccountAlternateContact(ctx context.Context, cfg aws.Config, stream *StreamSender) ([]Resource, error) {
