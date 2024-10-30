@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"strings"
 
-	awsmodel "github.com/opengovern/og-describer-template/aws/model"
-	"github.com/opengovern/og-describer-template/pkg/steampipe"
+	model "github.com/opengovern/og-describer-template/provider/model"
+	"github.com/opengovern/og-describer-template/steampipe"
 	"github.com/go-errors/errors"
-	"github.com/opengovern/og-describer-template/aws"
-	"github.com/opengovern/og-describer-template/aws/describer"
+	"github.com/opengovern/og-describer-template/provider"
+	"github.com/opengovern/og-describer-template/provider/describer"
 	"github.com/opengovern/og-util/pkg/describe"
 	"github.com/opengovern/og-util/pkg/source"
 	"github.com/opengovern/og-util/pkg/vault"
@@ -18,7 +18,7 @@ import (
 	"go.uber.org/zap"
 )
 
-type KaytuError struct {
+type Error struct {
 	ErrCode string
 
 	error
@@ -39,9 +39,6 @@ func Do(ctx context.Context,
 		}
 	}()
 
-	if job.SourceType != source.CloudAWS {
-		return nil, fmt.Errorf("unsupported source type %s", job.SourceType)
-	}
 
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -52,10 +49,10 @@ func Do(ctx context.Context,
 	}
 	logger.Info("decrypted config", zap.Any("config", config))
 
-	return doDescribeAWS(ctx, logger, job, config, grpcEndpoint, ingestionPipelineEndpoint, describeDeliverToken, useOpenSearch)
+	return doDescribe(ctx, logger, job, config, grpcEndpoint, ingestionPipelineEndpoint, describeDeliverToken, useOpenSearch)
 }
 
-func doDescribeAWS(ctx context.Context, logger *zap.Logger, job describe.DescribeJob, config map[string]any, grpcEndpoint, ingestionPipelineEndpoint string, describeToken string, useOpenSearch bool) ([]string, error) {
+func doDescribe(ctx context.Context, logger *zap.Logger, job describe.DescribeJob, config map[string]any, grpcEndpoint, ingestionPipelineEndpoint string, describeToken string, useOpenSearch bool) ([]string, error) {
 	logger.Info("Making New Resource Sender")
 	rs, err := NewResourceSender(grpcEndpoint, ingestionPipelineEndpoint, describeToken, job.JobID, useOpenSearch, logger)
 	if err != nil {
@@ -86,7 +83,7 @@ func doDescribeAWS(ctx context.Context, logger *zap.Logger, job describe.Describ
 		resource.Account = job.AccountID
 		resource.Type = strings.ToLower(job.ResourceType)
 		resource.Partition = partition
-		awsMetadata := awsmodel.Metadata{
+		awsMetadata := model.Metadata{
 			Name:         resource.Name,
 			AccountID:    job.AccountID,
 			SourceID:     job.SourceID,
@@ -166,7 +163,7 @@ func doDescribeAWS(ctx context.Context, logger *zap.Logger, job describe.Describ
 		creds.Regions, creds.AccountID, creds.AccessKey, creds.SecretKey, creds.SessionToken, creds.AssumeRoleName, creds.AssumeAdminRoleName, creds.ExternalID,
 		false, clientStream)
 	if err != nil {
-		return nil, fmt.Errorf("AWS: %w", err)
+		return nil, fmt.Errorf("%w", err)
 	}
 	logger.Info("Finished getting resources", zap.Any("output", output))
 
@@ -183,14 +180,14 @@ func doDescribeAWS(ctx context.Context, logger *zap.Logger, job describe.Describ
 	// if there is an error in some regions, return those errors. For the regions
 	// with no error, return the list of resources.
 	if len(errs) > 0 {
-		err = fmt.Errorf("AWS: [%s]", strings.Join(errs, ","))
+		err = fmt.Errorf("[%s]", strings.Join(errs, ","))
 	} else {
 		err = nil
 	}
 
 	var kerr error
 	if err != nil {
-		kerr = KaytuError{
+		kerr = Error{
 			ErrCode: output.ErrorCode,
 			error:   err,
 		}
