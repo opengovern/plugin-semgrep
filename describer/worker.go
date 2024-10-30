@@ -8,7 +8,6 @@ import (
 
 	awsmodel "github.com/opengovern/og-describer-template/aws/model"
 	"github.com/opengovern/og-describer-template/pkg/steampipe"
-
 	"github.com/go-errors/errors"
 	"github.com/opengovern/og-describer-template/aws"
 	"github.com/opengovern/og-describer-template/aws/describer"

@@ -10,7 +10,6 @@ import (
 
 	"fmt"
 
-	"github.com/opengovern/og-describer-template/steampipe-plugin-aws/aws"
 	"github.com/opengovern/og-util/pkg/steampipe"
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"

@@ -1,0 +1,17 @@
+[
+  {
+    "ResourceName": "AWS::Redshift::Snapshot",
+    "ResourceLabel": "Snapshot",
+    "ServiceName": "Redshift",
+    "ListDescriber": "ParallelDescribeRegional(describer.RedshiftSnapshot)",
+    "GetDescriber": "ParallelDescribeRegionalSingleResource(describer.GetRedshiftSnapshot)",
+    "TerraformName": [
+      "aws_redshift_cluster_snapshot"
+    ],
+    "TerraformServiceName": "redshift",
+    "Discovery": "COMPLETE",
+    "SteampipeTable": "aws_redshift_snapshot",
+    "Model": "RedshiftSnapshot"
+  }
+
+]

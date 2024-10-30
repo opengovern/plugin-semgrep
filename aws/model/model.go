@@ -1,4 +1,4 @@
-//go:generate go run ./gen/main.go --file $GOFILE --output ../../pkg/opengovernance-es-sdk/aws_resources_clients.go --type aws
+//go:generate go run ../../SDK/runnable/models/main.go --file $GOFILE --output ../../SDK/generated/resources_clients.go --type aws
 
 package model
 

@@ -11,7 +11,7 @@ import (
 	"text/template"
 )
 
-//go:embed aws-resource-types.json
+//go:embed resource-types.json
 var awsResourceTypes string
 
 type DiscoveryStatus string
@@ -43,27 +43,31 @@ type ResourceType struct {
 
 var (
 	provider = flag.String("provider", "", "")
+	cloud =flag.String("cloud", "", "")
+	upperProvider =flag.String("uprovider", "", "")
 	output   = flag.String("output", "", "")
 	indexMap = flag.String("index-map", "", "")
+	
+
 )
 
 func main() {
 	flag.Parse()
 
 	if provider == nil || *provider == "" {
-		v := "aws"
-		provider = &v
+		fmt.Println("You should enter privder")
+		os.Exit(1)
+		 
 	}
 
 	var resourceTypes []ResourceType
-	var cloud string
-	var upperProvider string
+	
 
 	if err := json.Unmarshal([]byte(awsResourceTypes), &resourceTypes); err != nil {
 		panic(err)
 	}
-	cloud = "CloudAWS"
-	upperProvider = "AWS"
+	cloud := *cloud
+	upperProvider := *upperProvider
 
 	tmpl, err := template.New("").Parse(fmt.Sprintf(`
 	"{{ .ResourceName }}": {
