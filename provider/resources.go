@@ -1,6 +1,7 @@
-//go:generate go run ../inventory-data/resource_types_generator.go --provider aws --output resource_types.go --index-map ../pkg/steampipe/table_index_map.go && gofmt -w -s resource_types.go  && goimports -w resource_types.go
+// Complete generate script below
+//go:generate go run ../SDK/runable/resourceType/resource_types_generator.go  --output resource_types.go --index-map ../steampipe/table_index_map.go && gofmt -w -s resource_types.go  && goimports -w resource_types.go
 
-package aws
+package provider
 
 import (
 	"context"

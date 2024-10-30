@@ -42,9 +42,6 @@ type ResourceType struct {
 }
 
 var (
-	provider = flag.String("provider", "", "")
-	cloud =flag.String("cloud", "", "")
-	upperProvider =flag.String("uprovider", "", "")
 	output   = flag.String("output", "", "")
 	indexMap = flag.String("index-map", "", "")
 	
@@ -53,8 +50,11 @@ var (
 
 func main() {
 	flag.Parse()
+	provider:= os.Getenv("PROVIDER")
+	cloud := os.Getenv("CLOUD")
+	upperProvider := os.Getenv("UPPER_PROVIDER")
 
-	if provider == nil || *provider == "" {
+	if provider == "" {
 		fmt.Println("You should enter privder")
 		os.Exit(1)
 		 
@@ -66,8 +66,7 @@ func main() {
 	if err := json.Unmarshal([]byte(awsResourceTypes), &resourceTypes); err != nil {
 		panic(err)
 	}
-	cloud := *cloud
-	upperProvider := *upperProvider
+
 
 	tmpl, err := template.New("").Parse(fmt.Sprintf(`
 	"{{ .ResourceName }}": {
@@ -107,7 +106,7 @@ import (
 	"github.com/opengovern/og-util/pkg/source"
 )
 var resourceTypes = map[string]ResourceType{
-`, *provider))
+`, provider))
 	for _, resourceType := range resourceTypes {
 		if resourceType.Discovery == DiscoveryStatus_DISABLED {
 			continue
@@ -158,7 +157,7 @@ import (
 )
 
 var %[1]sMap = map[string]string{
-`, *provider))
+`, provider))
 	for _, resourceType := range resourceTypes {
 		b.WriteString(fmt.Sprintf("  \"%s\": \"%s\",\n", resourceType.ResourceName, resourceType.SteampipeTable))
 	}

@@ -1,4 +1,4 @@
-package aws
+package provider
 
 import (
 	"github.com/opengovern/og-describer-template/aws/describer"
