@@ -6,15 +6,14 @@ import (
 	"fmt"
 	"strings"
 
-	model "github.com/opengovern/og-describer-template/provider/model"
-	"github.com/opengovern/og-describer-template/steampipe"
 	"github.com/go-errors/errors"
 	"github.com/opengovern/og-describer-template/provider"
 	"github.com/opengovern/og-describer-template/provider/describer"
+	model "github.com/opengovern/og-describer-template/provider/model"
+	"github.com/opengovern/og-describer-template/steampipe"
 	"github.com/opengovern/og-util/pkg/describe"
 	"github.com/opengovern/og-util/pkg/source"
 	"github.com/opengovern/og-util/pkg/vault"
-	"github.com/opengovern/og-util/proto/src/golang"
 	"go.uber.org/zap"
 )
 
@@ -62,106 +61,19 @@ func doDescribe(ctx context.Context, logger *zap.Logger, job describe.DescribeJo
 	logger.Info("Connect to steampipe plugin")
 	plg := steampipe.Plugin()
 	logger.Info("Account Config From Map")
-	creds, err := aws.AccountConfigFromMap(config)
+	creds, err := provider.AccountConfigFromMap(config)
 	if err != nil {
-		return nil, fmt.Errorf("aws account credentials: %w", err)
+		return nil, fmt.Errorf(" account credentials: %w", err)
 	}
 
 	f := func(resource describer.Resource) error {
-		logger.Info("got a new resource", zap.String("resourceID", resource.ID))
-		if resource.Description == nil {
-			return nil
-		}
-		descriptionJSON, err := json.Marshal(resource.Description)
-		if err != nil {
-			return err
-		}
-		partition, _ := aws.PartitionOf(resource.Region)
-		if partition == "" {
-			partition = "aws"
-		}
-		resource.Account = job.AccountID
-		resource.Type = strings.ToLower(job.ResourceType)
-		resource.Partition = partition
-		awsMetadata := model.Metadata{
-			Name:         resource.Name,
-			AccountID:    job.AccountID,
-			SourceID:     job.SourceID,
-			Region:       resource.Region,
-			Partition:    partition,
-			ResourceType: strings.ToLower(job.ResourceType),
-		}
-
-		awsMetadataBytes, err := json.Marshal(awsMetadata)
-		if err != nil {
-			return fmt.Errorf("marshal metadata: %v", err.Error())
-		}
-
-		metadata := make(map[string]string)
-		err = json.Unmarshal(awsMetadataBytes, &metadata)
-		if err != nil {
-			return fmt.Errorf("unmarshal metadata: %v", err.Error())
-		}
-
-		kafkaResource := Resource{
-			ID:            resource.UniqueID(),
-			ARN:           resource.ARN,
-			Name:          resource.Name,
-			SourceType:    source.CloudAWS,
-			ResourceType:  strings.ToLower(job.ResourceType),
-			ResourceGroup: "",
-			Location:      resource.Region,
-			SourceID:      job.SourceID,
-			ResourceJobID: job.JobID,
-			CreatedAt:     job.DescribedAt,
-			Description:   resource.Description,
-			Metadata:      metadata,
-		}
-
-		tags, name, err := steampipe.ExtractTagsAndNames(logger, plg, job.ResourceType, kafkaResource)
-		if err != nil {
-			return fmt.Errorf("failed to build tags for service: %v", err.Error())
-		}
-		if len(name) > 0 {
-			kafkaResource.Metadata["name"] = name
-		}
-
-		rs.Send(&golang.AWSResource{
-			UniqueId:        resource.UniqueID(),
-			Arn:             resource.ARN,
-			Id:              resource.ID,
-			Name:            resource.Name,
-			Account:         job.AccountID,
-			Region:          resource.Region,
-			Partition:       partition,
-			Type:            job.ResourceType,
-			DescriptionJson: string(descriptionJSON),
-			Metadata:        metadata,
-			Tags:            tags,
-			Job: &golang.DescribeJob{
-				JobId:        uint32(job.JobID),
-				ResourceType: job.ResourceType,
-				SourceId:     job.SourceID,
-				AccountId:    job.AccountID,
-				DescribedAt:  job.DescribedAt,
-				SourceType:   string(job.SourceType),
-				ConfigReg:    job.CipherText,
-				TriggerType:  string(job.TriggerType),
-				RetryCounter: uint32(job.RetryCounter),
-			},
-		})
-		return nil
+		// Send the resource to the resource sender
 	}
 	clientStream := (*describer.StreamSender)(&f)
 
 	logger.Info("Created Client Stream")
-
-	output, err := aws.GetResources(
-		ctx, logger,
-		job.ResourceType, job.TriggerType,
-		job.AccountID,
-		creds.Regions, creds.AccountID, creds.AccessKey, creds.SecretKey, creds.SessionToken, creds.AssumeRoleName, creds.AssumeAdminRoleName, creds.ExternalID,
-		false, clientStream)
+	// Get the resource type object
+	output, err := "",nil
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}
@@ -169,29 +81,12 @@ func doDescribe(ctx context.Context, logger *zap.Logger, job describe.DescribeJo
 
 	rs.Finish()
 
-	var errs []string
-	for region, err := range output.Errors {
-		if err != "" {
-			errs = append(errs, fmt.Sprintf("region (%s): %s", region, err))
-		}
-	}
+	kerr:= nil
+	// Check if there are any errors
 
-	// For AWS resources, since they are queries independently per region,
-	// if there is an error in some regions, return those errors. For the regions
-	// with no error, return the list of resources.
-	if len(errs) > 0 {
-		err = fmt.Errorf("[%s]", strings.Join(errs, ","))
-	} else {
-		err = nil
-	}
+	
 
-	var kerr error
-	if err != nil {
-		kerr = Error{
-			ErrCode: output.ErrorCode,
-			error:   err,
-		}
-	}
+	
 
 	return rs.GetResourceIDs(), kerr
 }

@@ -12,7 +12,7 @@ import (
 )
 
 //go:embed resource-types.json
-var awsResourceTypes string
+var ResourceTypes string
 
 type DiscoveryStatus string
 
@@ -63,7 +63,7 @@ func main() {
 	var resourceTypes []ResourceType
 	
 
-	if err := json.Unmarshal([]byte(awsResourceTypes), &resourceTypes); err != nil {
+	if err := json.Unmarshal([]byte(ResourceTypes), &resourceTypes); err != nil {
 		panic(err)
 	}
 

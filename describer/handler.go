@@ -166,7 +166,7 @@ func DescribeHandler(ctx context.Context, logger *zap.Logger, _ TriggeredBy, inp
 	status := DescribeResourceJobSucceeded
 	if err != nil {
 		errMsg = err.Error()
-		var kerr KaytuError
+		var kerr Error
 		if errors.As(err, &kerr) {
 			errCode = kerr.ErrCode
 		}

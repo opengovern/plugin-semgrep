@@ -19,7 +19,7 @@ import (
 
 var (
 	file       = flag.String("file", "", "Location of the model file")
-	sourceType = flag.String("type", "", "Type of resource clients (e.g. aws, azure). Should match the model import path")
+	sourceType = flag.String("type", "", "Type of resource clients (e.g. , azure). Should match the model import path")
 	output     = flag.String("output", "", "Location of the output file")
 )
 
@@ -46,7 +46,7 @@ type ResourceType struct {
 }
 
 func main() {
-	rt := "../inventory-data/aws-resource-types.json"
+	rt := "../resourceType/resource-types.json"
 	b, err := os.ReadFile(rt)
 	if err != nil {
 		panic(err)
