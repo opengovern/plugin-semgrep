@@ -50,7 +50,7 @@ func Do(ctx context.Context,
 
 	return doDescribe(ctx, logger, job, config, grpcEndpoint, ingestionPipelineEndpoint, describeDeliverToken, useOpenSearch)
 }
-
+// TODO
 func doDescribe(ctx context.Context, logger *zap.Logger, job describe.DescribeJob, config map[string]any, grpcEndpoint, ingestionPipelineEndpoint string, describeToken string, useOpenSearch bool) ([]string, error) {
 	logger.Info("Making New Resource Sender")
 	rs, err := NewResourceSender(grpcEndpoint, ingestionPipelineEndpoint, describeToken, job.JobID, useOpenSearch, logger)

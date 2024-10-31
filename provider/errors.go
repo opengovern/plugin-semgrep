@@ -8,6 +8,7 @@ const (
 	ErrSubscriptionRequired = "SubscriptionRequiredException"
 )
 
+// TODO
 
 func hasError(resource any) bool {
 	// You should implement this function.
