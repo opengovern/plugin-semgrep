@@ -30,7 +30,7 @@ Complete the index map same as the example in the [table_index_map.go](./steampi
 
 ### 5. Copy the Steampipe plugin
 
-Copy you  Steampipe plugin to root directory of the repository.
+Copy your  Steampipe plugin to root directory of the repository.
 
 ### 6. Complete authentication and describer files
 
@@ -44,6 +44,3 @@ Just run the following command to run the template:
 ```bash
 go run main.go
 ```
-
-
-

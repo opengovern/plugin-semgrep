@@ -9,7 +9,6 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"os"
 	"time"
-
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/opengovern/og-util/pkg/vault"
 	"github.com/opengovern/og-util/proto/src/golang"
@@ -129,7 +128,6 @@ func DescribeHandler(ctx context.Context, logger *zap.Logger, _ TriggeredBy, inp
 		break
 	}
 
-	logger.Info("Setting up vault")
 	var vaultSc vault.VaultSourceConfig
 	switch input.VaultConfig.Provider {
 	case vault.AwsKMS:
@@ -181,15 +179,15 @@ func DescribeHandler(ctx context.Context, logger *zap.Logger, _ TriggeredBy, inp
 			Error:     errMsg,
 			ErrorCode: errCode,
 			DescribeJob: &golang.DescribeJob{
-				JobId:        uint32(input.DescribeJob.JobID),
-				ResourceType: input.DescribeJob.ResourceType,
-				SourceId:     input.DescribeJob.SourceID,
-				AccountId:    input.DescribeJob.AccountID,
-				DescribedAt:  input.DescribeJob.DescribedAt,
-				SourceType:   string(input.DescribeJob.SourceType),
-				ConfigReg:    input.DescribeJob.CipherText,
-				TriggerType:  string(input.DescribeJob.TriggerType),
-				RetryCounter: uint32(input.DescribeJob.RetryCounter),
+			JobId:        uint32(input.DescribeJob.JobID),
+			ResourceType: input.DescribeJob.ResourceType,
+			SourceId:     input.DescribeJob.SourceID,
+			AccountId:    input.DescribeJob.AccountID,
+			DescribedAt:  input.DescribeJob.DescribedAt,
+			SourceType:   string(input.DescribeJob.SourceType),
+			ConfigReg:    input.DescribeJob.CipherText,
+			TriggerType:  string(input.DescribeJob.TriggerType),
+			RetryCounter: uint32(input.DescribeJob.RetryCounter),
 			},
 			DescribedResourceIds: resourceIds,
 		})
