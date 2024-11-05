@@ -111,7 +111,7 @@ func (s *ResourceSender) ResourceHandler() {
 				return
 			}
 
-			s.resourceIDs = append(s.resourceIDs, resource.ID)
+			s.resourceIDs = append(s.resourceIDs, resource.ResourceID)
 			s.sendBuffer = append(s.sendBuffer, resource)
 
 			if len(s.sendBuffer) > MaxBufferSize {
@@ -169,7 +169,7 @@ func (s *ResourceSender) flushBuffer(force bool) {
 		kafkaResource.EsIndex = idx
 
 		lookupResource := es.LookupResource{
-			ProviderID:      resource.ProviderID,
+			PlatformID:      resource.PlatformID,
 			ResourceID:      resource.ResourceID,
 			ResourceName:    resource.ResourceName,
 			IntegrationType: configs.IntegrationName,
