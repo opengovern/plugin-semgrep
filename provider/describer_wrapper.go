@@ -7,7 +7,7 @@ import (
 )
 
 func DescribeByAccount(describe func(context.Context, *AccountConfig, string, *model.StreamSender) ([]model.Resource, error)) model.ResourceDescriber {
-	return func(ctx context.Context, cfg AccountConfig, triggerType enums.DescribeTriggerType, additionalData map[string]string, stream *model.StreamSender) ([]model.Resource, error) {
+	return func(ctx context.Context, cfg AccountConfig, triggerType enums.DescribeTriggerType, additionalParameters map[string]string, stream *model.StreamSender) ([]model.Resource, error) {
 
 		var values []model.Resource
 
