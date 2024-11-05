@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/opengovern/og-describer-template/pkg/describer"
 	"github.com/opengovern/og-describer-template/provider/configs"
 	"os"
 	"runtime"

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
+	describepkg "github.com/opengovern/og-util/pkg/describe"
 	"github.com/opengovern/og-util/pkg/vault"
 	"github.com/opengovern/og-util/proto/src/golang"
 	"golang.org/x/oauth2"
@@ -61,7 +62,7 @@ const (
 
 // DescribeHandler
 // TriggeredBy is not used for now but might be relevant in the future
-func DescribeHandler(ctx context.Context, logger *zap.Logger, _ TriggeredBy, input describe.DescribeWorkerInput) error {
+func DescribeHandler(ctx context.Context, logger *zap.Logger, _ TriggeredBy, input describepkg.DescribeWorkerInput) error {
 	var err error
 	defer func() {
 		if r := recover(); r != nil {
