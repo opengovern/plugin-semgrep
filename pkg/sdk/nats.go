@@ -1,4 +1,4 @@
-package SDK
+package sdk
 
 import (
 	"context"

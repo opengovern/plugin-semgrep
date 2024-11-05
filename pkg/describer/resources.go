@@ -5,7 +5,7 @@ package describer
 import (
 	"context"
 	"fmt"
-	model "github.com/opengovern/og-describer-template/pkg/SDK/models"
+	model "github.com/opengovern/og-describer-template/pkg/sdk/models"
 	"github.com/opengovern/og-describer-template/provider"
 	"github.com/opengovern/og-describer-template/provider/configs"
 	"github.com/opengovern/og-describer-template/provider/describer"

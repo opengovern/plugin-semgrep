@@ -1,7 +1,7 @@
 package local
 
 import (
-	"github.com/opengovern/og-describer-template/pkg/SDK"
+	"github.com/opengovern/og-describer-template/pkg/sdk"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -16,7 +16,7 @@ func WorkerCommand() *cobra.Command {
 				return err
 			}
 
-			w, err := SDK.NewWorker(
+			w, err := sdk.NewWorker(
 				logger,
 				cmd.Context(),
 			)
