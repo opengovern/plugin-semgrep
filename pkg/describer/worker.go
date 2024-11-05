@@ -153,7 +153,7 @@ func doDescribe(
 			Description:         description,
 			IntegrationType:     configs.IntegrationName,
 			ResourceType:        strings.ToLower(job.ResourceType),
-			IntegrationID:       job.SourceID,
+			IntegrationID:       job.IntegrationID,
 			IntegrationMetadata: metadata,
 			CanonicalTags:       newTags,
 			DescribedAt:         job.DescribedAt,
