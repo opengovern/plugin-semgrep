@@ -2,6 +2,8 @@ package provider
 
 import (
 	"encoding/json"
+	model "github.com/opengovern/og-describer-template/pkg/SDK/models"
+	"github.com/opengovern/og-util/pkg/describe"
 )
 
 // Import the any type from the config package.
@@ -25,4 +27,20 @@ func AccountConfigFromMap(m map[string]any) (AccountConfig, error) {
 	}
 
 	return c, nil
+}
+
+func GetResourceMetadata(job describe.DescribeJob, resource model.Resource) (map[string]string, error) {
+	metadata := make(map[string]string)
+
+	return metadata, nil
+}
+
+func AdjustResource(job describe.DescribeJob, resource *model.Resource) error {
+	return nil
+}
+
+func GetAdditionalParameters(job describe.DescribeJob) (map[string]string, error) {
+	additionalParameters := make(map[string]string)
+
+	return additionalParameters, nil
 }

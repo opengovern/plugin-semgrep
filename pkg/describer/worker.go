@@ -108,8 +108,14 @@ func doDescribe(
 			return fmt.Errorf("failed to trim json: %w", err)
 		}
 
-		metadata := map[string]string{}
-		// TODO fix resource object
+		metadata, err := provider.GetResourceMetadata(job, resource)
+		if err != nil {
+			return fmt.Errorf("failed to get resource metadata")
+		}
+		err = provider.AdjustResource(job, &resource)
+		if err != nil {
+			return fmt.Errorf("failed to get resource metadata")
+		}
 
 		desc := resource.Description
 		err = json.Unmarshal(descriptionJSON, &desc)
@@ -156,12 +162,17 @@ func doDescribe(
 	}
 	clientStream := (*model.StreamSender)(&f)
 
+	additionalParameters, err := provider.GetAdditionalParameters(job)
+	if err != nil {
+		return nil, err
+	}
 	err = GetResources(
 		ctx,
 		logger,
 		job.ResourceType,
 		job.TriggerType,
 		creds,
+		additionalParameters,
 		clientStream,
 	)
 	if err != nil {
