@@ -25,18 +25,6 @@ func ListResourceTypes() []string {
 	return list
 }
 
-func ListSummarizeResourceTypes() []string {
-	var list []string
-	for k, v := range provider.ResourceTypes {
-		if v.Summarize {
-			list = append(list, k)
-		}
-	}
-
-	sort.Strings(list)
-	return list
-}
-
 func GetResourceType(resourceType string) (*model.ResourceType, error) {
 	if r, ok := provider.ResourceTypes[resourceType]; ok {
 		return &r, nil
@@ -54,17 +42,6 @@ func GetResourceType(resourceType string) (*model.ResourceType, error) {
 
 func GetResourceTypesMap() map[string]model.ResourceType {
 	return provider.ResourceTypes
-}
-
-func GetResourceTypeByTerraform(terraformType string) string {
-	for t, v := range provider.ResourceTypes {
-		for _, name := range v.TerraformName {
-			if name == terraformType {
-				return t
-			}
-		}
-	}
-	return ""
 }
 
 func GetResources(
