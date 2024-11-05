@@ -6,9 +6,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/opengovern/og-describer-template/provider/configs"
 	"github.com/opengovern/og-util/pkg/es"
-	"github.com/opengovern/og-util/pkg/integration"
-
 	"github.com/opengovern/og-util/proto/src/golang"
 	"go.uber.org/zap"
 	"golang.org/x/oauth2"
@@ -172,7 +171,7 @@ func (s *ResourceSender) flushBuffer(force bool) {
 		lookupResource := es.LookupResource{
 			ResourceID:      resource.ID,
 			Name:            resource.Name,
-			IntegrationType: integration.Type("AZURE_SUBSCRIPTION"),
+			IntegrationType: configs.IntegrationName,
 			ResourceType:    strings.ToLower(resource.ResourceType),
 			ResourceGroup:   resource.ResourceGroup,
 			Location:        resource.Location,

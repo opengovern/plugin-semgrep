@@ -1,17 +1,10 @@
 package local
 
 import (
-
-
+	"github.com/opengovern/og-describer-template/pkg/SDK"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
-	"github.com/opengovern/og-describer-template/SDK"
-	
 )
-
-
-
-
 
 func WorkerCommand() *cobra.Command {
 	cmd := &cobra.Command{
@@ -37,4 +30,3 @@ func WorkerCommand() *cobra.Command {
 
 	return cmd
 }
-

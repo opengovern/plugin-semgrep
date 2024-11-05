@@ -6,19 +6,18 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"google.golang.org/grpc/credentials/insecure"
-	"os"
-	"time"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/opengovern/og-util/pkg/vault"
 	"github.com/opengovern/og-util/proto/src/golang"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/credentials/oauth"
 	"google.golang.org/grpc/metadata"
+	"os"
+	"time"
 
-	"github.com/opengovern/og-util/pkg/describe"
 	"go.uber.org/zap"
 )
 
@@ -179,15 +178,15 @@ func DescribeHandler(ctx context.Context, logger *zap.Logger, _ TriggeredBy, inp
 			Error:     errMsg,
 			ErrorCode: errCode,
 			DescribeJob: &golang.DescribeJob{
-			JobId:        uint32(input.DescribeJob.JobID),
-			ResourceType: input.DescribeJob.ResourceType,
-			SourceId:     input.DescribeJob.SourceID,
-			AccountId:    input.DescribeJob.AccountID,
-			DescribedAt:  input.DescribeJob.DescribedAt,
-			SourceType:   string(input.DescribeJob.SourceType),
-			ConfigReg:    input.DescribeJob.CipherText,
-			TriggerType:  string(input.DescribeJob.TriggerType),
-			RetryCounter: uint32(input.DescribeJob.RetryCounter),
+				JobId:        uint32(input.DescribeJob.JobID),
+				ResourceType: input.DescribeJob.ResourceType,
+				SourceId:     input.DescribeJob.SourceID,
+				AccountId:    input.DescribeJob.AccountID,
+				DescribedAt:  input.DescribeJob.DescribedAt,
+				SourceType:   string(input.DescribeJob.SourceType),
+				ConfigReg:    input.DescribeJob.CipherText,
+				TriggerType:  string(input.DescribeJob.TriggerType),
+				RetryCounter: uint32(input.DescribeJob.RetryCounter),
 			},
 			DescribedResourceIds: resourceIds,
 		})
