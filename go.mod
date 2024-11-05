@@ -9,7 +9,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/nats-io/nats.go v1.36.0
-	github.com/opengovern/og-util v1.0.6-0.20241105205341-26a7e2e86ae7
+	github.com/opengovern/og-util v1.0.6-0.20241105213733-96098f54d56c
 	github.com/spf13/cobra v1.7.0
 	github.com/turbot/steampipe-plugin-sdk/v5 v5.8.0
 	go.uber.org/zap v1.26.0

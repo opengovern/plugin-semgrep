@@ -174,7 +174,6 @@ func (s *ResourceSender) flushBuffer(force bool) {
 			ResourceName:    resource.ResourceName,
 			IntegrationType: configs.IntegrationName,
 			ResourceType:    strings.ToLower(resource.ResourceType),
-			Location:        resource.Location,
 			IntegrationID:   resource.IntegrationID,
 			DescribedBy:     resource.DescribedBy,
 			DescribedAt:     resource.DescribedAt,

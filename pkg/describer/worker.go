@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-errors/errors"
+	"github.com/google/uuid"
 	model "github.com/opengovern/og-describer-template/pkg/sdk/models"
 	"github.com/opengovern/og-describer-template/provider"
 	"github.com/opengovern/og-describer-template/provider/configs"
@@ -13,6 +14,7 @@ import (
 	"github.com/opengovern/og-util/pkg/es"
 	"github.com/opengovern/og-util/pkg/vault"
 	"go.uber.org/zap"
+	strconv "strconv"
 	"strings"
 )
 
@@ -148,7 +150,6 @@ func doDescribe(
 			PlatformID:          uuid.New().String(),
 			ResourceID:          resource.UniqueID(),
 			ResourceName:        resource.Name,
-			Location:            resource.Location,
 			Description:         description,
 			IntegrationType:     configs.IntegrationName,
 			ResourceType:        strings.ToLower(job.ResourceType),
