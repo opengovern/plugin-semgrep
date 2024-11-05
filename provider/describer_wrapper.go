@@ -7,7 +7,8 @@ import (
 	"golang.org/x/net/context"
 )
 
-func DescribeByAccount(describe func(context.Context, *configs.AccountConfig, string, *model.StreamSender) ([]model.Resource, error)) model.ResourceDescriber {
+// DescribeByIntegration TODO: implement a wrapper to pass integration authorization to describer functions
+func DescribeByIntegration(describe func(context.Context, *configs.AccountConfig, string, *model.StreamSender) ([]model.Resource, error)) model.ResourceDescriber {
 	return func(ctx context.Context, cfg configs.AccountConfig, triggerType enums.DescribeTriggerType, additionalParameters map[string]string, stream *model.StreamSender) ([]model.Resource, error) {
 
 		var values []model.Resource

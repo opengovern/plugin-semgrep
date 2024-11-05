@@ -22,6 +22,10 @@ func GetTriggerTypeFromContext(ctx context.Context) enums.DescribeTriggerType {
 	return tt
 }
 
+func GetParameterFromContext(ctx context.Context, key string) any {
+	return ctx.Value(key)
+}
+
 func WithLogger(ctx context.Context, logger *zap.Logger) context.Context {
 	return context.WithValue(ctx, "logger", logger)
 }

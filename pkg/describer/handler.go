@@ -147,6 +147,11 @@ func DescribeHandler(ctx context.Context, logger *zap.Logger, _ TriggeredBy, inp
 		}
 	}
 	logger.Info("Vault setup complete")
+
+	for k, v := range input.ExtraInputs {
+		ctx = context.WithValue(ctx, k, v)
+	}
+
 	resourceIds, err := Do(
 		ctx,
 		vaultSc,
