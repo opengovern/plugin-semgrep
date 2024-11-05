@@ -699,6 +699,8 @@ github.com/olekukonko/tablewriter v0.0.5 h1:P2Ga83D34wi1o9J6Wh1mRuqd4mF/x/lgBS7N
 github.com/olekukonko/tablewriter v0.0.5/go.mod h1:hPp6KlRPjbx+hW8ykQs1w3UBbZlj6HuIJcUGPhkA7kY=
 github.com/opengovern/og-util v1.0.4 h1:xF1F6rCm0BCwXxKxs+qG07O5oh/ZCQTzLQpNYvTADZc=
 github.com/opengovern/og-util v1.0.4/go.mod h1:7l7fNhK6uewIwA0cs7QagJuhjt/E6hEAC01SR8Y0kKk=
+github.com/opengovern/og-util v1.0.6-0.20241103104655-33e8cb710353 h1:DWReXnXoUmefnbCSRuQJCkh77SRu5XwdrNjfR+qmABY=
+github.com/opengovern/og-util v1.0.6-0.20241103104655-33e8cb710353/go.mod h1:7l7fNhK6uewIwA0cs7QagJuhjt/E6hEAC01SR8Y0kKk=
 github.com/opensearch-project/opensearch-go/v2 v2.3.0 h1:nQIEMr+A92CkhHrZgUhcfsrZjibvB3APXf2a1VwCmMQ=
 github.com/opensearch-project/opensearch-go/v2 v2.3.0/go.mod h1:8LDr9FCgUTVoT+5ESjc2+iaZuldqE+23Iq0r1XeNue8=
 github.com/pganalyze/pg_query_go/v4 v4.2.3 h1:cNLqyiVMasV7YGWyYV+fkXyHp32gDfXVNCqoHztEGNk=

@@ -7,20 +7,21 @@ import (
 	"errors"
 	"fmt"
 	"github.com/opengovern/og-util/pkg/es"
-	
-	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/protobuf/types/known/anypb"
-	"io"
-	"net/http"
-	"strings"
-	"time"
+	"github.com/opengovern/og-util/pkg/integration"
+
 	"github.com/opengovern/og-util/proto/src/golang"
 	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/credentials/oauth"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/types/known/anypb"
+	"io"
+	"net/http"
+	"strings"
+	"time"
 )
 
 const (
@@ -30,11 +31,10 @@ const (
 	BufferEmptyRate time.Duration = 5 * time.Second
 )
 
-// Chaneg any types to your provider Resource definition. That type should have 
 type ResourceSender struct {
 	authToken                 string
 	logger                    *zap.Logger
-	resourceChannel           chan *any
+	resourceChannel           chan *es.Resource
 	resourceIDs               []string
 	doneChannel               chan interface{}
 	conn                      *grpc.ClientConn
@@ -45,7 +45,7 @@ type ResourceSender struct {
 	client     golang.EsSinkServiceClient
 	httpClient *http.Client
 
-	sendBuffer    []*any
+	sendBuffer    []*es.Resource
 	useOpenSearch bool
 }
 
@@ -53,7 +53,7 @@ func NewResourceSender(grpcEndpoint, ingestionPipelineEndpoint string, describeT
 	rs := ResourceSender{
 		authToken:                 describeToken,
 		logger:                    logger,
-		resourceChannel:           make(chan *any, ChannelSize),
+		resourceChannel:           make(chan *es.Resource, ChannelSize),
 		resourceIDs:               nil,
 		doneChannel:               make(chan interface{}),
 		conn:                      nil,
@@ -111,9 +111,8 @@ func (s *ResourceSender) ResourceHandler() {
 				s.doneChannel <- struct{}{}
 				return
 			}
-			// Add resource ID to the list
-			// Example
-			// s.resourceIDs = append(s.resourceIDs, resource.UniqueId)
+
+			s.resourceIDs = append(s.resourceIDs, resource.ID)
 			s.sendBuffer = append(s.sendBuffer, resource)
 
 			if len(s.sendBuffer) > MaxBufferSize {
@@ -153,69 +152,6 @@ func (s *ResourceSender) sendToBackend(resourcesToSend []es.Doc) {
 	}
 }
 
-func (s *ResourceSender) sendToOpenSearchIngestPipeline(resourcesToSend []es.Doc) {
-	if len(resourcesToSend) == 0 {
-		return
-	}
-
-	jsonResourcesToSend, err := json.Marshal(resourcesToSend)
-	if err != nil {
-		s.logger.Error("failed to marshal resources", zap.Error(err))
-		return
-	}
-
-	req, err := http.NewRequest(
-		http.MethodPost,
-		s.ingestionPipelineEndpoint,
-		strings.NewReader(string(jsonResourcesToSend)),
-	)
-	req.Header.Add("Content-Type", "application/json")
-
-	// cfg, err := config.LoadDefaultConfig(context.TODO())
-	// if err != nil {
-	// 	s.logger.Error("failed to load configuration", zap.Error(err))
-	// 	return
-	// }
-	// // creds, err := cfg.Credentials.Retrieve(context.Background())
-	// if err != nil {
-	// 	s.logger.Error("failed to retrieve credentials", zap.Error(err))
-	// 	return
-	// }
-
-	// signer := v4.NewSigner()
-	// err = signer.SignHTTP(context.TODO(), creds, req,
-	// 	fmt.Sprintf("%x", sha256.Sum256(jsonResourcesToSend)),
-	// 	"osis", "us-east-2", time.Now())
-	// if err != nil {
-	// 	s.logger.Error("failed to sign request", zap.Error(err))
-	// 	return
-	// }
-
-	resp, err := s.httpClient.Do(req)
-	if err != nil {
-		s.logger.Error("failed to send request", zap.Error(err))
-		return
-	}
-	defer resp.Body.Close()
-	// check status
-	if resp.StatusCode != http.StatusOK {
-		bodyStr := ""
-		if resp.Body != nil {
-			bodyBytes, err := io.ReadAll(resp.Body)
-			if err != nil {
-				s.logger.Warn("failed to read response body", zap.Error(err))
-			} else {
-				bodyStr = string(bodyBytes)
-			}
-		}
-		s.logger.Error("failed to send resources to OpenSearch",
-			zap.Int("statusCode", resp.StatusCode),
-			zap.String("body", bodyStr),
-		)
-		return
-	}
-}
-
 func (s *ResourceSender) flushBuffer(force bool) {
 	if len(s.sendBuffer) == 0 {
 		return
@@ -226,8 +162,34 @@ func (s *ResourceSender) flushBuffer(force bool) {
 	}
 
 	resourcesToSend := make([]es.Doc, 0, 2*len(s.sendBuffer))
-	// TODO Flush buffer
-	// Implement the logic to send the resources to the backend
+
+	for _, resource := range s.sendBuffer {
+		kafkaResource := resource
+		keys, idx := kafkaResource.KeysAndIndex()
+		kafkaResource.EsID = es.HashOf(keys...)
+		kafkaResource.EsIndex = idx
+
+		lookupResource := es.LookupResource{
+			ResourceID:      resource.ID,
+			Name:            resource.Name,
+			IntegrationType: integration.Type("AZURE_SUBSCRIPTION"),
+			ResourceType:    strings.ToLower(resource.ResourceType),
+			ResourceGroup:   resource.ResourceGroup,
+			Location:        resource.Location,
+			SourceID:        resource.SourceID,
+			ResourceJobID:   resource.ResourceJobID,
+			SourceJobID:     resource.SourceJobID,
+			ScheduleJobID:   resource.ScheduleJobID,
+			CreatedAt:       resource.CreatedAt,
+			Tags:            resource.CanonicalTags,
+		}
+		lookupKeys, lookupIdx := lookupResource.KeysAndIndex()
+		lookupResource.EsID = es.HashOf(lookupKeys...)
+		lookupResource.EsIndex = lookupIdx
+
+		resourcesToSend = append(resourcesToSend, kafkaResource)
+		resourcesToSend = append(resourcesToSend, lookupResource)
+	}
 
 	s.sendToBackend(resourcesToSend)
 	s.sendBuffer = nil
@@ -243,6 +205,6 @@ func (s *ResourceSender) GetResourceIDs() []string {
 	return s.resourceIDs
 }
 
-func (s *ResourceSender) Send(resource *any) {
+func (s *ResourceSender) Send(resource *es.Resource) {
 	s.resourceChannel <- resource
 }

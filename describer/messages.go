@@ -10,7 +10,7 @@ type Resource struct {
 	// Description is the description of the resource based on the describe call.
 	Description interface{} `json:"description"`
 	// SourceType is the type of the source of the resource, i.e. AWS Cloud, Azure Cloud.
-	SourceType source.Type `json:"source_type"`
+	IntegrationType source.Type `json:"integration_type"`
 	// ResourceType is the type of the resource.
 	ResourceType string `json:"resource_type"`
 	// ResourceJobID is the DescribeResourceJob ID that described this resource

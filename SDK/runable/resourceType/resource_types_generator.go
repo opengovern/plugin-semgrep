@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/opengovern/og-describer-template/provider/configs"
 	"os"
 	"sort"
 	"strings"
@@ -44,29 +45,25 @@ type ResourceType struct {
 var (
 	output   = flag.String("output", "", "")
 	indexMap = flag.String("index-map", "", "")
-	
-
 )
 
 func main() {
 	flag.Parse()
-	provider:= os.Getenv("PROVIDER")
-	cloud := os.Getenv("CLOUD")
-	upperProvider := os.Getenv("UPPER_PROVIDER")
+	provider := configs.Provider
+	cloud := configs.Cloud
+	upperProvider := configs.UpperProvider
 
 	if provider == "" {
 		fmt.Println("You should enter privder")
 		os.Exit(1)
-		 
+
 	}
 
 	var resourceTypes []ResourceType
-	
 
 	if err := json.Unmarshal([]byte(ResourceTypes), &resourceTypes); err != nil {
 		panic(err)
 	}
-
 
 	tmpl, err := template.New("").Parse(fmt.Sprintf(`
 	"{{ .ResourceName }}": {

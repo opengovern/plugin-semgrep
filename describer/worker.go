@@ -2,17 +2,12 @@ package describer
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"strings"
-
 	"github.com/go-errors/errors"
 	"github.com/opengovern/og-describer-template/provider"
 	"github.com/opengovern/og-describer-template/provider/describer"
-	model "github.com/opengovern/og-describer-template/provider/model"
 	"github.com/opengovern/og-describer-template/steampipe"
 	"github.com/opengovern/og-util/pkg/describe"
-	"github.com/opengovern/og-util/pkg/source"
 	"github.com/opengovern/og-util/pkg/vault"
 	"go.uber.org/zap"
 )
@@ -38,7 +33,6 @@ func Do(ctx context.Context,
 		}
 	}()
 
-
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
@@ -50,8 +44,15 @@ func Do(ctx context.Context,
 
 	return doDescribe(ctx, logger, job, config, grpcEndpoint, ingestionPipelineEndpoint, describeDeliverToken, useOpenSearch)
 }
-// TODO
-func doDescribe(ctx context.Context, logger *zap.Logger, job describe.DescribeJob, config map[string]any, grpcEndpoint, ingestionPipelineEndpoint string, describeToken string, useOpenSearch bool) ([]string, error) {
+
+func doDescribe(
+	ctx context.Context,
+	logger *zap.Logger,
+	job describe.DescribeJob,
+	config map[string]any,
+	grpcEndpoint, ingestionPipelineEndpoint string,
+	describeToken string,
+	useOpenSearch bool) ([]string, error) {
 	logger.Info("Making New Resource Sender")
 	rs, err := NewResourceSender(grpcEndpoint, ingestionPipelineEndpoint, describeToken, job.JobID, useOpenSearch, logger)
 	if err != nil {
@@ -73,7 +74,7 @@ func doDescribe(ctx context.Context, logger *zap.Logger, job describe.DescribeJo
 
 	logger.Info("Created Client Stream")
 	// Get the resource type object
-	output, err := "",nil
+	output, err := "", nil
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}
@@ -81,12 +82,8 @@ func doDescribe(ctx context.Context, logger *zap.Logger, job describe.DescribeJo
 
 	rs.Finish()
 
-	kerr:= nil
+	kerr := nil
 	// Check if there are any errors
-
-	
-
-	
 
 	return rs.GetResourceIDs(), kerr
 }

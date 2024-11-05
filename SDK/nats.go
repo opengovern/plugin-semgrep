@@ -1,9 +1,10 @@
 package SDK
 
 import (
-"context"
+	"context"
 	"encoding/json"
 	"errors"
+	"github.com/opengovern/og-describer-template/provider/configs"
 	"os"
 	"runtime"
 	"time"
@@ -19,7 +20,6 @@ import (
 )
 
 type Worker struct {
-	
 	logger   *zap.Logger
 	esClient opengovernance.Client
 	jq       *jq.JobQueue
@@ -27,42 +27,27 @@ type Worker struct {
 	esSinkClient esSinkClient.EsSinkServiceClient
 }
 
-
-
-
-var (StreamName           = os.Getenv("STERAM_NAME"))
-
-var (JobQueueTopic = os.Getenv("JOB_QUEUE_TOPIC"))
-var (ConsumerGroup = os.Getenv("CONSUMER_GROUP"))
-var (JobQueueTopicManuals = os.Getenv("MANUAL_JOB_QUEUE_TOPIC"))
-var (ConsumerGroupManuals = os.Getenv("MANUAL_CONSUMER_GROUP"))
-
-
-
-
 var (
 	ManualTriggers = os.Getenv("MANUAL_TRIGGERS")
 )
 
-
-
 func NewWorker(
-	
+
 	logger *zap.Logger,
 	ctx context.Context,
 ) (*Worker, error) {
 	url := os.Getenv("NATS_URL")
 	jq, err := jq.New(url, logger)
 	if err != nil {
-		logger.Error("failed to create job queue", zap.Error(err), zap.String("url",url))
+		logger.Error("failed to create job queue", zap.Error(err), zap.String("url", url))
 		return nil, err
 	}
 
-	topic := JobQueueTopic
+	topic := configs.JobQueueTopic
 	if ManualTriggers == "true" {
-		topic = JobQueueTopicManuals
+		topic = configs.JobQueueTopicManuals
 	}
-	if err := jq.Stream(ctx, StreamName, " describe job runner queue", []string{topic}, 200000); err != nil {
+	if err := jq.Stream(ctx, configs.StreamName, " describe job runner queue", []string{topic}, 200000); err != nil {
 		logger.Error("failed to create stream", zap.Error(err))
 		return nil, err
 	}
@@ -77,13 +62,13 @@ func NewWorker(
 
 func (w *Worker) Run(ctx context.Context) error {
 	w.logger.Info("starting to consume")
-	topic := JobQueueTopic
-	consumer := ConsumerGroup
+	topic := configs.JobQueueTopic
+	consumer := configs.ConsumerGroup
 	if ManualTriggers == "true" {
-		topic = JobQueueTopicManuals
-		consumer = ConsumerGroupManuals
+		topic = configs.JobQueueTopicManuals
+		consumer = configs.ConsumerGroupManuals
 	}
-	consumeCtx, err := w.jq.ConsumeWithConfig(ctx, consumer, StreamName, []string{topic}, jetstream.ConsumerConfig{
+	consumeCtx, err := w.jq.ConsumeWithConfig(ctx, consumer, configs.StreamName, []string{topic}, jetstream.ConsumerConfig{
 		Replicas:          1,
 		AckPolicy:         jetstream.AckExplicitPolicy,
 		DeliverPolicy:     jetstream.DeliverAllPolicy,
