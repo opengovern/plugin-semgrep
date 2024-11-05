@@ -169,17 +169,15 @@ func (s *ResourceSender) flushBuffer(force bool) {
 		kafkaResource.EsIndex = idx
 
 		lookupResource := es.LookupResource{
-			ResourceID:      resource.ID,
-			Name:            resource.Name,
+			ProviderID:      resource.ProviderID,
+			ResourceID:      resource.ResourceID,
+			ResourceName:    resource.ResourceName,
 			IntegrationType: configs.IntegrationName,
 			ResourceType:    strings.ToLower(resource.ResourceType),
-			ResourceGroup:   resource.ResourceGroup,
 			Location:        resource.Location,
-			SourceID:        resource.SourceID,
-			ResourceJobID:   resource.ResourceJobID,
-			SourceJobID:     resource.SourceJobID,
-			ScheduleJobID:   resource.ScheduleJobID,
-			CreatedAt:       resource.CreatedAt,
+			IntegrationID:   resource.IntegrationID,
+			DescribedBy:     resource.DescribedBy,
+			DescribedAt:     resource.DescribedAt,
 			Tags:            resource.CanonicalTags,
 		}
 		lookupKeys, lookupIdx := lookupResource.KeysAndIndex()

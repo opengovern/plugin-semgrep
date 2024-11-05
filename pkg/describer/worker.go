@@ -145,18 +145,18 @@ func doDescribe(
 		}
 
 		rs.Send(&es.Resource{
-			ID:              resource.UniqueID(),
-			Description:     description,
-			IntegrationType: configs.IntegrationName,
-			ResourceType:    strings.ToLower(job.ResourceType),
-			ResourceJobID:   uint(uint32(job.JobID)),
-			SourceID:        job.SourceID,
-			Metadata:        metadata,
-			Name:            resource.Name,
-			ResourceGroup:   resource.ResourceGroup,
-			Location:        resource.Location,
-			CreatedAt:       job.DescribedAt,
-			CanonicalTags:   newTags,
+			PlatformID:          uuid.New().String(),
+			ResourceID:          resource.UniqueID(),
+			ResourceName:        resource.Name,
+			Location:            resource.Location,
+			Description:         description,
+			IntegrationType:     configs.IntegrationName,
+			ResourceType:        strings.ToLower(job.ResourceType),
+			IntegrationID:       job.SourceID,
+			IntegrationMetadata: metadata,
+			CanonicalTags:       newTags,
+			DescribedAt:         job.DescribedAt,
+			DescribedBy:         strconv.FormatUint(uint64(job.JobID), 10),
 		})
 		return nil
 	}

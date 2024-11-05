@@ -703,6 +703,10 @@ github.com/opengovern/og-util v1.0.6-0.20241103104655-33e8cb710353 h1:DWReXnXoUm
 github.com/opengovern/og-util v1.0.6-0.20241103104655-33e8cb710353/go.mod h1:7l7fNhK6uewIwA0cs7QagJuhjt/E6hEAC01SR8Y0kKk=
 github.com/opengovern/og-util v1.0.6-0.20241105163426-0bff13a6e9b7 h1:DMjmOuOomJaWsUX4cBX23UIbc9b27hgAUuwbB0Klnes=
 github.com/opengovern/og-util v1.0.6-0.20241105163426-0bff13a6e9b7/go.mod h1:7l7fNhK6uewIwA0cs7QagJuhjt/E6hEAC01SR8Y0kKk=
+github.com/opengovern/og-util v1.0.6-0.20241105204626-bdedd0f03692 h1:oCH5XPdAfq1qOTAmVxsxMc02VHRRUwUTo/oGXzxuDiY=
+github.com/opengovern/og-util v1.0.6-0.20241105204626-bdedd0f03692/go.mod h1:7l7fNhK6uewIwA0cs7QagJuhjt/E6hEAC01SR8Y0kKk=
+github.com/opengovern/og-util v1.0.6-0.20241105205341-26a7e2e86ae7 h1:uhGtBSoYsn4ZPNeKMSAc11x5UXPQb2Y+LJNvg6KF4kE=
+github.com/opengovern/og-util v1.0.6-0.20241105205341-26a7e2e86ae7/go.mod h1:7l7fNhK6uewIwA0cs7QagJuhjt/E6hEAC01SR8Y0kKk=
 github.com/opensearch-project/opensearch-go/v2 v2.3.0 h1:nQIEMr+A92CkhHrZgUhcfsrZjibvB3APXf2a1VwCmMQ=
 github.com/opensearch-project/opensearch-go/v2 v2.3.0/go.mod h1:8LDr9FCgUTVoT+5ESjc2+iaZuldqE+23Iq0r1XeNue8=
 github.com/pganalyze/pg_query_go/v4 v4.2.3 h1:cNLqyiVMasV7YGWyYV+fkXyHp32gDfXVNCqoHztEGNk=
