@@ -55,20 +55,29 @@ func GetResourceTypesMap() map[string]model.ResourceType {
 	return provider.ResourceTypes
 }
 
-type Resources struct {
-	Resources map[string][]describer.Resource
-	Errors    map[string]string
-	ErrorCode string
+func GetResources(
+	ctx context.Context,
+	logger *zap.Logger,
+	resourceType string,
+	triggerType enums.DescribeTriggerType,
+	cfg provider.AccountConfig,
+	stream *model.StreamSender,
+) error {
+	_, err := describe(ctx, logger, cfg, resourceType, triggerType, stream)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func describe(ctx context.Context, logger *zap.Logger, cfg any, account string, regions []string, resourceType string, triggerType enums.DescribeTriggerType, stream *describer.StreamSender) (*Resources, error) {
+func describe(ctx context.Context, logger *zap.Logger, accountCfg any, resourceType string, triggerType enums.DescribeTriggerType, stream *model.StreamSender) ([]model.Resource, error) {
 	resourceTypeObject, ok := provider.ResourceTypes[resourceType]
 	if !ok {
 		return nil, fmt.Errorf("unsupported resource type: %s", resourceType)
 	}
 	ctx = describer.WithLogger(ctx, logger)
 
-	return resourceTypeObject.ListDescriber(ctx, cfg, account, regions, resourceType, triggerType, stream)
+	return resourceTypeObject.ListDescriber(ctx, accountCfg, resourceType, triggerType, stream)
 }
 
 func GetResourceTypeByTerraform(terraformType string) string {

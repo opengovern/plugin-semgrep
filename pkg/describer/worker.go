@@ -156,15 +156,12 @@ func doDescribe(
 	}
 	clientStream := (*model.StreamSender)(&f)
 
-	_, err = provider.GetResources(
+	err = GetResources(
 		ctx,
 		logger,
 		job.ResourceType,
 		job.TriggerType,
-		[]string{subscriptionId},
 		creds,
-		string(provider.AuthEnv),
-		"",
 		clientStream,
 	)
 	if err != nil {
