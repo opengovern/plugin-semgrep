@@ -3,27 +3,21 @@ package provider
 import (
 	"encoding/json"
 	model "github.com/opengovern/og-describer-template/pkg/SDK/models"
+	"github.com/opengovern/og-describer-template/provider/configs"
 	"github.com/opengovern/og-util/pkg/describe"
 )
 
-// Import the any type from the config package.
-// You should write you own Authorization Function.
-
-type AccountConfig struct {
-	// You should provide Credentials for any Provider.
-}
-
-// AccountConfigFromMap TODO: converts a map to an AccountConfig.
-func AccountConfigFromMap(m map[string]any) (AccountConfig, error) {
+// AccountCredentialsFromMap TODO: converts a map to an configs.AccountConfig.
+func AccountCredentialsFromMap(m map[string]any) (configs.AccountConfig, error) {
 	mj, err := json.Marshal(m)
 	if err != nil {
-		return AccountConfig{}, err
+		return configs.AccountConfig{}, err
 	}
 
-	var c AccountConfig
+	var c configs.AccountConfig
 	err = json.Unmarshal(mj, &c)
 	if err != nil {
-		return AccountConfig{}, err
+		return configs.AccountConfig{}, err
 	}
 
 	return c, nil

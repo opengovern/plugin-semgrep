@@ -90,7 +90,7 @@ func doDescribe(
 	logger.Info("Connect to steampipe plugin")
 	plg := steampipe.Plugin()
 	logger.Info("Account Config From Map")
-	creds, err := provider.AccountConfigFromMap(config)
+	creds, err := provider.AccountCredentialsFromMap(config)
 	if err != nil {
 		return nil, fmt.Errorf(" account credentials: %w", err)
 	}

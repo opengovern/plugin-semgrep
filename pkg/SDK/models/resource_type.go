@@ -1,15 +1,15 @@
 package models
 
 import (
-	"github.com/opengovern/og-describer-template/provider"
+	"github.com/opengovern/og-describer-template/provider/configs"
 	"github.com/opengovern/og-util/pkg/describe/enums"
 	"github.com/opengovern/og-util/pkg/integration"
 	"golang.org/x/net/context"
 )
 
 // any types are used to load your provider configuration.
-type ResourceDescriber func(context.Context, provider.AccountConfig, enums.DescribeTriggerType, map[string]string, *StreamSender) ([]Resource, error)
-type SingleResourceDescriber func(context.Context, provider.AccountConfig, enums.DescribeTriggerType, map[string]string) (*Resource, error)
+type ResourceDescriber func(context.Context, configs.AccountConfig, enums.DescribeTriggerType, map[string]string, *StreamSender) ([]Resource, error)
+type SingleResourceDescriber func(context.Context, configs.AccountConfig, enums.DescribeTriggerType, map[string]string) (*Resource, error)
 
 type ResourceType struct {
 	IntegrationType integration.Type
