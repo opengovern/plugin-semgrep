@@ -4,17 +4,14 @@ import (
 	"encoding/json"
 )
 
-
 // Import the any type from the config package.
 // You should write you own Authorization Function.
-
-
 
 type AccountConfig struct {
 	// You should provide Credentials for any Provider.
 }
-// TODO
-// AccountConfigFromMap converts a map to an AccountConfig.
+
+// AccountConfigFromMap TODO: converts a map to an AccountConfig.
 func AccountConfigFromMap(m map[string]any) (AccountConfig, error) {
 	mj, err := json.Marshal(m)
 	if err != nil {

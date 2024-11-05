@@ -7,4 +7,5 @@ const (
 	Cloud           = "ProviderCloud"                      // example: AWSCloud, AzureCloud
 	UpperProvider   = "Provider"                           // example: AWS, Azure
 	IntegrationName = integration.Type("INTEGRATION_NAME") // example: AWS_ACCOUNT, AZURE_SUBSCRIPTION
+	OGPluginRepoURL = "repo-url"                           // example: github.com/opengovern/og-describer-aws
 )

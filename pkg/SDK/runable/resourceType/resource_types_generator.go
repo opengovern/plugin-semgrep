@@ -50,7 +50,6 @@ var (
 func main() {
 	flag.Parse()
 	provider := configs.Provider
-	cloud := configs.Cloud
 	upperProvider := configs.UpperProvider
 
 	if provider == "" {
@@ -67,7 +66,7 @@ func main() {
 
 	tmpl, err := template.New("").Parse(fmt.Sprintf(`
 	"{{ .ResourceName }}": {
-		Connector:            source.%s,
+		IntegrationType:      configs.IntegrationName,
 		ResourceName:         "{{ .ResourceName }}",
 		ResourceLabel:        "{{ .ResourceLabel }}",
 		Tags:                 {{ .TagsString }},
@@ -80,7 +79,7 @@ func main() {
 		CostDiscovery:		  true,{{ end }}
 		Summarize:            {{ if .IgnoreSummarize }}false{{ else }}true{{ end }},
 	},
-`, cloud))
+`))
 	if err != nil {
 		panic(err)
 	}
@@ -99,11 +98,12 @@ func main() {
 	b.WriteString(fmt.Sprintf(`
 package %[1]s
 import (
-	"github.com/opengovern/og-%[1]s-describer/%[1]s/describer"
+	"%[2]s/describer"
 	"github.com/opengovern/og-util/pkg/source"
+	"%[2]s/provider/configs"
 )
-var resourceTypes = map[string]ResourceType{
-`, provider))
+var ResourceTypes = map[string]model.ResourceType{
+`, provider, configs.OGPluginRepoURL))
 	for _, resourceType := range resourceTypes {
 		if resourceType.Discovery == DiscoveryStatus_DISABLED {
 			continue
@@ -150,11 +150,11 @@ var resourceTypes = map[string]ResourceType{
 package steampipe
 
 import (
-	"github.com/opengovern/og-%[1]s-describer/pkg/opengovernance-es-sdk"
+	"%[2]s/pkg/SDK/generated"
 )
 
 var %[1]sMap = map[string]string{
-`, provider))
+`, provider, configs.OGPluginRepoURL))
 	for _, resourceType := range resourceTypes {
 		b.WriteString(fmt.Sprintf("  \"%s\": \"%s\",\n", resourceType.ResourceName, resourceType.SteampipeTable))
 	}

@@ -55,6 +55,17 @@ func GetResourceTypesMap() map[string]model.ResourceType {
 	return provider.ResourceTypes
 }
 
+func GetResourceTypeByTerraform(terraformType string) string {
+	for t, v := range provider.ResourceTypes {
+		for _, name := range v.TerraformName {
+			if name == terraformType {
+				return t
+			}
+		}
+	}
+	return ""
+}
+
 func GetResources(
 	ctx context.Context,
 	logger *zap.Logger,
@@ -70,7 +81,7 @@ func GetResources(
 	return nil
 }
 
-func describe(ctx context.Context, logger *zap.Logger, accountCfg any, resourceType string, triggerType enums.DescribeTriggerType, stream *model.StreamSender) ([]model.Resource, error) {
+func describe(ctx context.Context, logger *zap.Logger, accountCfg provider.AccountConfig, resourceType string, triggerType enums.DescribeTriggerType, stream *model.StreamSender) ([]model.Resource, error) {
 	resourceTypeObject, ok := provider.ResourceTypes[resourceType]
 	if !ok {
 		return nil, fmt.Errorf("unsupported resource type: %s", resourceType)
@@ -79,19 +90,3 @@ func describe(ctx context.Context, logger *zap.Logger, accountCfg any, resourceT
 
 	return resourceTypeObject.ListDescriber(ctx, accountCfg, resourceType, triggerType, stream)
 }
-
-func GetResourceTypeByTerraform(terraformType string) string {
-	for t, v := range provider.ResourceTypes {
-		for _, name := range v.TerraformName {
-			if name == terraformType {
-				return t
-			}
-		}
-	}
-	return ""
-}
-
-// ResourceTypes is a map of all the resource types supported by the provider.
-// TODO: Add your resource types here.
-// When you add a new resource type, you should also add a new entry in the resourceTypes map.
-// Write a function to describe the resource type and add it to the resourceTypes map.
