@@ -117,12 +117,12 @@ func (w *Worker) ProcessMessage(ctx context.Context, msg jetstream.Msg) error {
 	}
 	runtime.GC()
 
-	w.logger.Info("running job", zap.Uint("id", input.DescribeJob.JobID), zap.String("type", input.DescribeJob.ResourceType), zap.String("account", input.DescribeJob.AccountID))
+	w.logger.Info("running job", zap.Uint("id", input.DescribeJob.JobID), zap.String("type", input.DescribeJob.ResourceType), zap.String("providerID", input.DescribeJob.ProviderID))
 
 	err = describer.DescribeHandler(ctx, w.logger, describer.TriggeredByLocal, input)
 	endTime := time.Now()
 
-	w.logger.Info("job completed", zap.Uint("id", input.DescribeJob.JobID), zap.String("type", input.DescribeJob.ResourceType), zap.String("account", input.DescribeJob.AccountID), zap.Duration("duration", endTime.Sub(startTime)))
+	w.logger.Info("job completed", zap.Uint("id", input.DescribeJob.JobID), zap.String("type", input.DescribeJob.ResourceType), zap.String("providerID", input.DescribeJob.ProviderID), zap.Duration("duration", endTime.Sub(startTime)))
 	if err != nil {
 		w.logger.Error("failure while running job", zap.Error(err))
 		return err
