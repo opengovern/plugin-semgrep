@@ -13,13 +13,14 @@ type SingleResourceDescriber func(context.Context, configs.AccountConfig, enums.
 
 type ResourceType struct {
 	IntegrationType integration.Type
-
-	ResourceName string
-
-	Tags map[string][]string
+	ResourceName    string
 
 	ListDescriber ResourceDescriber
 	GetDescriber  SingleResourceDescriber
+
+	Annotations map[string]string
+	Labels      map[string]string
+	Tags        map[string][]string
 }
 
 func (r ResourceType) GetIntegrationType() integration.Type {
