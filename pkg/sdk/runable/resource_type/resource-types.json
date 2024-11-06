@@ -1,8 +1,6 @@
 [
   {
     "ResourceName": "AWS::Redshift::Snapshot",
-    "ResourceLabel": "Snapshot",
-    "ServiceName": "Redshift",
     "ListDescriber": "ParallelDescribeRegional(describer.RedshiftSnapshot)",
     "GetDescriber": "ParallelDescribeRegionalSingleResource(describer.GetRedshiftSnapshot)",
     "TerraformName": [

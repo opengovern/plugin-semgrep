@@ -15,31 +15,14 @@ import (
 //go:embed resource-types.json
 var ResourceTypes string
 
-type DiscoveryStatus string
-
-const (
-	DiscoveryStatus_COMPLETE = "COMPLETE"
-	DiscoveryStatus_FAST     = "FAST"
-	DiscoveryStatus_COST     = "COST"
-	DiscoveryStatus_DISABLED = "DISABLED"
-)
-
 type ResourceType struct {
-	ResourceName         string
-	ResourceLabel        string
-	Category             []string
-	Tags                 map[string][]string
-	TagsString           string `json:"-"`
-	ServiceName          string
-	ListDescriber        string
-	GetDescriber         string
-	TerraformName        []string
-	TerraformNameString  string `json:"-"`
-	TerraformServiceName string
-	Discovery            DiscoveryStatus
-	IgnoreSummarize      bool
-	SteampipeTable       string
-	Model                string
+	ResourceName   string
+	Tags           map[string][]string
+	TagsString     string `json:"-"`
+	ListDescriber  string
+	GetDescriber   string
+	SteampipeTable string
+	Model          string
 }
 
 var (
@@ -49,14 +32,6 @@ var (
 
 func main() {
 	flag.Parse()
-	provider := configs.Provider
-	upperProvider := configs.UpperProvider
-
-	if provider == "" {
-		fmt.Println("You should enter privder")
-		os.Exit(1)
-
-	}
 
 	var resourceTypes []ResourceType
 
@@ -68,16 +43,9 @@ func main() {
 	"{{ .ResourceName }}": {
 		IntegrationType:      configs.IntegrationName,
 		ResourceName:         "{{ .ResourceName }}",
-		ResourceLabel:        "{{ .ResourceLabel }}",
 		Tags:                 {{ .TagsString }},
-		ServiceName:          "{{ .ServiceName }}",
 		ListDescriber:        {{ .ListDescriber }},
 		GetDescriber:         {{ if .GetDescriber }}{{ .GetDescriber }}{{ else }}nil{{ end }},
-		TerraformName:        {{ .TerraformNameString }},
-		TerraformServiceName: "{{ .TerraformServiceName }}",
-		FastDiscovery:        {{ if eq .Discovery "FAST" }}true{{ else }}false{{ end }},{{ if eq .Discovery "COST" }}
-		CostDiscovery:		  true,{{ end }}
-		Summarize:            {{ if .IgnoreSummarize }}false{{ else }}true{{ end }},
 	},
 `))
 	if err != nil {
@@ -96,23 +64,16 @@ func main() {
 
 	b := &strings.Builder{}
 	b.WriteString(fmt.Sprintf(`
-package %[1]s
+package provider
 import (
-	"%[2]s/describer"
-	"github.com/opengovern/og-util/pkg/source"
-	"%[2]s/provider/configs"
+	"%[1]s/provider/describer"
+	"%[1]s/provider/configs"
+	model "github.com/opengovern/og-describer-azure/pkg/sdk/models"
 )
 var ResourceTypes = map[string]model.ResourceType{
-`, provider, configs.OGPluginRepoURL))
+`, configs.OGPluginRepoURL))
 	for _, resourceType := range resourceTypes {
-		if resourceType.Discovery == DiscoveryStatus_DISABLED {
-			continue
-		}
 		var arr []string
-		for _, t := range resourceType.TerraformName {
-			arr = append(arr, "\""+t+"\"")
-		}
-		resourceType.TerraformNameString = "[]string{" + strings.Join(arr, ",") + "}"
 
 		tagsStringBuilder := strings.Builder{}
 		tagsStringBuilder.WriteString("map[string][]string{\n")
@@ -150,25 +111,25 @@ var ResourceTypes = map[string]model.ResourceType{
 package steampipe
 
 import (
-	"%[2]s/pkg/SDK/generated"
+	"%[1]s/pkg/sdk/es"
 )
 
-var %[1]sMap = map[string]string{
-`, provider, configs.OGPluginRepoURL))
+var Map = map[string]string{
+`, configs.OGPluginRepoURL))
 	for _, resourceType := range resourceTypes {
 		b.WriteString(fmt.Sprintf("  \"%s\": \"%s\",\n", resourceType.ResourceName, resourceType.SteampipeTable))
 	}
 	b.WriteString(fmt.Sprintf(`}
 
-var %sDescriptionMap = map[string]interface{}{
-`, upperProvider))
+var DescriptionMap = map[string]interface{}{
+`))
 	for _, resourceType := range resourceTypes {
 		b.WriteString(fmt.Sprintf("  \"%s\": opengovernance.%s{},\n", resourceType.ResourceName, resourceType.Model))
 	}
 	b.WriteString(fmt.Sprintf(`}
 
-var %[1]sReverseMap = map[string]string{
-`, upperProvider))
+var ReverseMap = map[string]string{
+`))
 
 	// reverse map
 	for _, resourceType := range resourceTypes {
