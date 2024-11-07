@@ -7,17 +7,17 @@ import (
 	"github.com/opengovern/og-util/pkg/describe"
 )
 
-// AccountCredentialsFromMap TODO: converts a map to an configs.IntegrationConfig.
-func AccountCredentialsFromMap(m map[string]any) (configs.IntegrationConfig, error) {
+// AccountCredentialsFromMap TODO: converts a map to an configs.IntegrationCredentials.
+func AccountCredentialsFromMap(m map[string]any) (configs.IntegrationCredentials, error) {
 	mj, err := json.Marshal(m)
 	if err != nil {
-		return configs.IntegrationConfig{}, err
+		return configs.IntegrationCredentials{}, err
 	}
 
-	var c configs.IntegrationConfig
+	var c configs.IntegrationCredentials
 	err = json.Unmarshal(mj, &c)
 	if err != nil {
-		return configs.IntegrationConfig{}, err
+		return configs.IntegrationCredentials{}, err
 	}
 
 	return c, nil
