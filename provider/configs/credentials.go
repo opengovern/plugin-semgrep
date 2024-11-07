@@ -1,5 +1,5 @@
 package configs
 
-type IntegrationConfig struct {
+type IntegrationCredentials struct {
 	// You should provide Credentials for any Provider.
 }
