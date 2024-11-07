@@ -8,8 +8,8 @@ import (
 )
 
 // any types are used to load your provider configuration.
-type ResourceDescriber func(context.Context, configs.AccountConfig, enums.DescribeTriggerType, map[string]string, *StreamSender) ([]Resource, error)
-type SingleResourceDescriber func(context.Context, configs.AccountConfig, enums.DescribeTriggerType, map[string]string) (*Resource, error)
+type ResourceDescriber func(context.Context, configs.IntegrationConfig, enums.DescribeTriggerType, map[string]string, *StreamSender) ([]Resource, error)
+type SingleResourceDescriber func(context.Context, configs.IntegrationConfig, enums.DescribeTriggerType, map[string]string) (*Resource, error)
 
 type ResourceType struct {
 	IntegrationType integration.Type
