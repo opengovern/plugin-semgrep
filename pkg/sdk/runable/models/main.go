@@ -2,52 +2,66 @@ package main
 
 import (
 	"bytes"
-	_ "embed"
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/opengovern/og-describer-template/provider/configs"
 	"go/ast"
 	"go/format"
 	"go/parser"
 	"go/token"
 	"html/template"
-	"log"
 	"os"
 	"regexp"
 	"strings"
 )
 
 var (
-	file       = flag.String("file", "", "Location of the model file")
-	sourceType = flag.String("type", "", "Type of resource clients (e.g. , azure). Should match the model import path")
-	output     = flag.String("output", "", "Location of the output file")
+	file              = flag.String("file", "", "Location of the model file")
+	output            = flag.String("output", "", "Location of the output file")
+	resourceTypesFile = flag.String("resourceTypesFile", "", "Location of the resource types json file file")
+	pluginPath        = flag.String("pluginPath", "", "Location of the steampipe plugin")
 )
 
-type SourceType struct {
-	Name        string
-	Index       string
-	ListFilters map[string]string
-	GetFilters  map[string]string
-	SourceType  string
+const PluginPath = "../../../../steampipe-plugin-aws/aws" // TODO: change to steampipe plugin
+
+type IntegrationType struct {
+	Name            string
+	Index           string
+	IntegrationType string
+	ListFilters     map[string]string
+	GetFilters      map[string]string
 }
 
 type ResourceType struct {
-	ResourceName         string
-	ResourceLabel        string
-	ServiceName          string
-	ListDescriber        string
-	GetDescriber         string
-	TerraformName        []string
-	TerraformNameString  string `json:"-"`
-	TerraformServiceName string
-	FastDiscovery        bool
-	SteampipeTable       string
-	Model                string
+	ResourceName   string
+	ListDescriber  string
+	GetDescriber   string
+	SteampipeTable string
+	Model          string
 }
 
 func main() {
-	rt := "../resourceType/resource-types.json"
-	b, err := os.ReadFile(rt)
+	if output == nil || len(*output) == 0 {
+		v := "../../es/resources_clients.go"
+		output = &v
+	}
+	if file == nil || len(*file) == 0 {
+		v := "../../../../provider/model/model.go"
+		file = &v
+	}
+
+	if pluginPath == nil || len(*pluginPath) == 0 {
+		pp := PluginPath
+		pluginPath = &pp
+	}
+
+	if resourceTypesFile == nil || len(*resourceTypesFile) == 0 {
+		rt := "../resource_type/resource-types.json"
+		resourceTypesFile = &rt
+	}
+
+	b, err := os.ReadFile(*resourceTypesFile)
 	if err != nil {
 		panic(err)
 	}
@@ -65,15 +79,62 @@ func main() {
 // ==========================  START: {{ .Name }} =============================
 
 type {{ .Name }} struct {
-	Description   {{ .SourceType }}.{{ .Name }}Description 	` + "`json:\"description\"`" + `
-	Metadata      {{ .SourceType }}.Metadata 					` + "`json:\"metadata\"`" + `
-	ResourceJobID int ` + "`json:\"resource_job_id\"`" + `
-	SourceJobID   int ` + "`json:\"source_job_id\"`" + `
+	ResourceID string ` + "`json:\"resource_id\"`" + `
+	PlatformID string ` + "`json:\"platform_id\"`" + `
+	Description   {{ .IntegrationType }}.{{ .Name }}Description 	` + "`json:\"description\"`" + `
+	DescribedBy int ` + "`json:\"described_by\"`" + `
 	ResourceType  string ` + "`json:\"resource_type\"`" + `
-	SourceType    string ` + "`json:\"source_type\"`" + `
-	ID            string ` + "`json:\"id\"`" + `
-	ARN            string ` + "`json:\"arn\"`" + `
-	SourceID      string ` + "`json:\"source_id\"`" + `
+	IntegrationType    string ` + "`json:\"integration_type\"`" + `
+	IntegrationID      string ` + "`json:\"integration_id\"`" + `
+}
+
+func (r *{{ .Name }}) UnmarshalJSON(b []byte) error {
+	var rawMsg map[string]json.RawMessage
+	if err := json.Unmarshal(b, &rawMsg); err != nil {
+		return fmt.Errorf("unmarshalling type %T: %v", r, err)
+	}
+	for k, v := range rawMsg {
+		switch k {
+		case "description":
+			wrapper := {{ .IntegrationType }}Describer.JSONAllFieldsMarshaller{
+				Value: r.Description,
+			}
+			if err := json.Unmarshal(v, &wrapper); err != nil {
+				return fmt.Errorf("unmarshalling type %T: %v", r, err)
+			}
+			var ok bool
+			r.Description, ok = wrapper.Value.({{ .IntegrationType }}.{{ .Name }}Description)
+			if !ok {
+				return fmt.Errorf("unmarshalling type %T: %v", r, fmt.Errorf("expected type %T, got %T", r.Description, wrapper.Value))
+			}
+		case "platform_id":		
+			if err := json.Unmarshal(v, &r.PlatformID); err != nil {
+				return fmt.Errorf("unmarshalling type %T: %v", r, err)
+			}
+		case "resource_id":		
+			if err := json.Unmarshal(v, &r.ResourceID); err != nil {
+				return fmt.Errorf("unmarshalling type %T: %v", r, err)
+			}
+		case "resource_type":
+			if err := json.Unmarshal(v, &r.ResourceType); err != nil {
+				return fmt.Errorf("unmarshalling type %T: %v", r, err)
+			}
+		case "described_by":
+			if err := json.Unmarshal(v, &r.DescribedBy); err != nil {
+				return fmt.Errorf("unmarshalling type %T: %v", r, err)
+			}
+		case "integration_type":
+			if err := json.Unmarshal(v, &r.IntegrationType); err != nil {
+				return fmt.Errorf("unmarshalling type %T: %v", r, err)
+			}
+		case "integration_id":
+			if err := json.Unmarshal(v, &r.IntegrationID); err != nil {
+				return fmt.Errorf("unmarshalling type %T: %v", r, err)
+			}
+		default:
+		}
+	}
+	return nil
 }
 
 type {{ .Name }}Hit struct {
@@ -150,7 +211,8 @@ var list{{ .Name }}Filters = map[string]string{
 
 func List{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
 	plugin.Logger(ctx).Trace("List{{ .Name }}")
-	runtime.GC()
+    runtime.GC()
+
 	// create service
 	cfg := essdk.GetConfig(d.Connection)
 	ke, err := essdk.NewClientCached(cfg, d.ConnectionCache, ctx)
@@ -181,7 +243,7 @@ func List{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrate
 		return nil, err
 	}
 
-	paginator, err := k.New{{ .Name }}Paginator(essdk.BuildFilter(ctx, d.QueryContext, list{{ .Name }}Filters, "{{ .SourceType }}", accountId, encodedResourceCollectionFilters, clientType), d.QueryContext.Limit)
+	paginator, err := k.New{{ .Name }}Paginator(essdk.BuildFilter(ctx, d.QueryContext, list{{ .Name }}Filters, "{{ .IntegrationType }}", accountId, encodedResourceCollectionFilters, clientType), d.QueryContext.Limit)
 	if err != nil {
 		plugin.Logger(ctx).Error("List{{ .Name }} New{{ .Name }}Paginator", "error", err)
 		return nil, err
@@ -215,7 +277,7 @@ var get{{ .Name }}Filters = map[string]string{
 
 func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
 	plugin.Logger(ctx).Trace("Get{{ .Name }}")
-	runtime.GC()
+    runtime.GC()
 	// create service
 	cfg := essdk.GetConfig(d.Connection)
 	ke, err := essdk.NewClientCached(cfg, d.ConnectionCache, ctx)
@@ -242,7 +304,7 @@ func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 	}
 
 	limit := int64(1)
-	paginator, err := k.New{{ .Name }}Paginator(essdk.BuildFilter(ctx, d.QueryContext, get{{ .Name }}Filters, "{{ .SourceType }}", accountId, encodedResourceCollectionFilters, clientType), &limit)
+	paginator, err := k.New{{ .Name }}Paginator(essdk.BuildFilter(ctx, d.QueryContext, get{{ .Name }}Filters, "{{ .IntegrationType }}", accountId, encodedResourceCollectionFilters, clientType), &limit)
 	if err != nil {
 		return nil, err
 	}
@@ -270,12 +332,12 @@ func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 
 `)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	out, err := os.Create(*output)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	var buf bytes.Buffer
@@ -283,15 +345,13 @@ func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 	fset := token.NewFileSet()
 	node, err := parser.ParseFile(fset, *file, nil, parser.ParseComments)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	fmt.Fprintln(&buf, "// Code is generated by go generate. DO NOT EDIT.")
 	fmt.Fprintf(&buf, "package opengovernance")
 
-	
-
-	var sources []SourceType
+	var sources []IntegrationType
 
 	ast.Inspect(node, func(n ast.Node) bool {
 		decl, ok := n.(*ast.GenDecl)
@@ -307,31 +367,20 @@ func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 				continue
 			}
 
-			s := SourceType{
-				Name:        strings.TrimSuffix(t.Name.String(), "Description"),
-				SourceType:  *sourceType,
-				GetFilters:  map[string]string{},
-				ListFilters: map[string]string{},
+			s := IntegrationType{
+				Name:            strings.TrimSuffix(t.Name.String(), "Description"),
+				IntegrationType: configs.IntegrationTypeLower,
+				GetFilters:      map[string]string{},
+				ListFilters:     map[string]string{},
 			}
-			exists := false
 			for _, resourceType := range resourceTypes {
 				if resourceType.Model == s.Name {
-					exists = true
 					var stopWordsRe = regexp.MustCompile(`\W+`)
 					index := stopWordsRe.ReplaceAllString(resourceType.ResourceName, "_")
 					index = strings.ToLower(index)
 					s.Index = index
 
-					tableAliasMap := map[string]string{
-						"aws_api_gateway_authorizer": "table_aws_api_gateway_api_authorizer.go",
-					}
-
-					tableFile := fmt.Sprintf("table_%s.go", resourceType.SteampipeTable)
-					if v, ok := tableAliasMap[resourceType.SteampipeTable]; ok {
-						tableFile = v
-					}
-					plugin := "steampipe-plugin-aws/aws"
-					fileName := "../../" + plugin + "/" + tableFile
+					fileName := *pluginPath + "/table_" + resourceType.SteampipeTable + ".go"
 					tableFileSet := token.NewFileSet()
 					tableNode, err := parser.ParseFile(tableFileSet, fileName, nil, parser.ParseComments)
 					if err != nil {
@@ -359,10 +408,6 @@ func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 							}
 
 							if columnName != "" && transformer != "" {
-								transformer = strings.ToLower(transformer[:1]) + transformer[1:]
-								if !strings.Contains(transformer, ".") {
-									transformer = strings.ToLower(transformer)
-								}
 								s.GetFilters[columnName] = transformer
 								s.ListFilters[columnName] = transformer
 							}
@@ -371,9 +416,6 @@ func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 						return true
 					})
 				}
-			}
-			if !exists {
-				fmt.Println("resourceType not found", s.Name)
 			}
 
 			if decl.Doc != nil {
@@ -390,17 +432,14 @@ func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 						s.ListFilters[fparts[0]] = fparts[1]
 					}
 				}
-				s.GetFilters["og_account_id"] = "metadata.SourceID"
-				s.ListFilters["og_account_id"] = "metadata.SourceID"
 			}
 
 			if s.Index != "" {
 				sources = append(sources, s)
 			} else {
-				fmt.Println("ignoring due to empty index", s)
+				fmt.Println("failed to find the index:", s.Name)
 			}
 		}
-
 		return false
 	})
 
@@ -408,34 +447,38 @@ func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 		fmt.Fprintln(&buf, `
 		import (
 			"context"
-			"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+			"encoding/json"
+			"fmt"
 			essdk "github.com/opengovern/og-util/pkg/opengovernance-es-sdk"
 			steampipesdk "github.com/opengovern/og-util/pkg/steampipe"
-			`+*sourceType+` "github.com/opengovern/og-`+*sourceType+`-describer/`+*sourceType+`/model"
+			"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+			`+configs.IntegrationTypeLower+`Describer "`+configs.OGPluginRepoURL+`/provider/describer"
+			`+configs.IntegrationTypeLower+` "`+configs.OGPluginRepoURL+`/provider/model"
             "runtime"
 		)
 
 		type Client struct {
 			essdk.Client
 		}
+
 		`)
 	}
 
 	for _, source := range sources {
 		err := tpl.Execute(&buf, source)
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
 	}
 
 	source, err := format.Source(buf.Bytes())
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	_, err = out.Write(source)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 }
 
