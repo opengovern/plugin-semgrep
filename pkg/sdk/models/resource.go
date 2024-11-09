@@ -8,8 +8,6 @@ type Resource struct {
 
 	Name                string
 	Type                string
-	ResourceGroup       string
-	Location            string
 	IntegrationMetadata interface{}
 }
 
