@@ -12,11 +12,6 @@ import (
 	"text/template"
 )
 
-// Embed the JSON file containing resource types
-//
-//go:embed resource-types.json
-var ResourceTypes string
-
 // Define the ResourceType struct with Labels and Annotations
 type ResourceType struct {
 	ResourceName      string
@@ -33,8 +28,8 @@ type ResourceType struct {
 }
 
 var (
+	resourceTypesFile = flag.String("resourceTypesFile", "", "Location of the resource types json file file")
 	output            = flag.String("output", "", "Path to the output file for resource types")
-	indexMap          = flag.String("index-map", "", "Path to the output file for index map")
 	resourceTypesList = flag.String("resource-types-list", "", "Path to the output file for index map")
 )
 
@@ -43,8 +38,17 @@ func main() {
 
 	var resourceTypes []ResourceType
 
+	if resourceTypesFile == nil || len(*resourceTypesFile) == 0 {
+		rt := "../../../../provider/resource_types/resource-types.json"
+		resourceTypesFile = &rt
+	}
+
+	resourceTypesFileJson, err := os.ReadFile(*resourceTypesFile)
+	if err != nil {
+		panic(err)
+	}
 	// Parse the embedded JSON into resourceTypes slice
-	if err := json.Unmarshal([]byte(ResourceTypes), &resourceTypes); err != nil {
+	if err := json.Unmarshal(resourceTypesFileJson, &resourceTypes); err != nil {
 		panic(err)
 	}
 
@@ -66,13 +70,8 @@ func main() {
 
 	// Set default output paths if not provided
 	if output == nil || len(*output) == 0 {
-		v := "resource_types.go"
+		v := "../../../../provider/resource_types.go"
 		output = &v
-	}
-
-	if indexMap == nil || len(*indexMap) == 0 {
-		v := "table_index_map.go"
-		indexMap = &v
 	}
 
 	if resourceTypesList == nil || len(*resourceTypesList) == 0 {
@@ -166,43 +165,6 @@ var ResourceTypes = map[string]model.ResourceType{
 
 	// Write the generated content to the output file
 	err = os.WriteFile(*output, []byte(b.String()), os.ModePerm)
-	if err != nil {
-		panic(err)
-	}
-
-	// Generate the index map file as before
-	b = &strings.Builder{}
-	b.WriteString(fmt.Sprintf(`package steampipe
-
-import (
-	"%[1]s/pkg/sdk/es"
-)
-
-var Map = map[string]string{
-`, configs.OGPluginRepoURL))
-	for _, resourceType := range resourceTypes {
-		b.WriteString(fmt.Sprintf("  \"%s\": \"%s\",\n", resourceType.ResourceName, resourceType.SteampipeTable))
-	}
-	b.WriteString(fmt.Sprintf(`}
-
-var DescriptionMap = map[string]interface{}{
-`))
-	for _, resourceType := range resourceTypes {
-		b.WriteString(fmt.Sprintf("  \"%s\": opengovernance.%s{},\n", resourceType.ResourceName, resourceType.Model))
-	}
-	b.WriteString(fmt.Sprintf(`}
-
-var ReverseMap = map[string]string{
-`))
-
-	// Build the reverse map
-	for _, resourceType := range resourceTypes {
-		b.WriteString(fmt.Sprintf("  \"%s\": \"%s\",\n", resourceType.SteampipeTable, resourceType.ResourceName))
-	}
-	b.WriteString("}\n")
-
-	// Write the index map to the specified file
-	err = os.WriteFile(*indexMap, []byte(b.String()), os.ModePerm)
 	if err != nil {
 		panic(err)
 	}
