@@ -404,7 +404,6 @@ func Get{{ .Name }}(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateD
 			essdk "github.com/opengovern/og-util/pkg/opengovernance-es-sdk"
 			steampipesdk "github.com/opengovern/og-util/pkg/steampipe"
 			"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
-			`+configs.IntegrationTypeLower+`Describer "`+configs.OGPluginRepoURL+`/provider/describer"
 			`+configs.IntegrationTypeLower+` "`+configs.OGPluginRepoURL+`/provider/model"
             "runtime"
 		)
