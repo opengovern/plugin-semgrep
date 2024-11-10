@@ -23,7 +23,7 @@ var (
 	pluginPath        = flag.String("pluginPath", "", "Location of the steampipe plugin")
 )
 
-const PluginPath = "../../../../steampipe-plugin-aws/aws" // TODO: change to steampipe plugin
+const PluginPath = ""
 
 type IntegrationType struct {
 	Name            string
@@ -82,6 +82,7 @@ type {{ .Name }} struct {
 	ResourceID string ` + "`json:\"resource_id\"`" + `
 	PlatformID string ` + "`json:\"platform_id\"`" + `
 	Description   {{ .IntegrationType }}.{{ .Name }}Description 	` + "`json:\"description\"`" + `
+	Metadata      {{ .IntegrationType }}.Metadata 					` + "`json:\"metadata\"`" + `
 	DescribedBy int ` + "`json:\"described_by\"`" + `
 	ResourceType  string ` + "`json:\"resource_type\"`" + `
 	IntegrationType    string ` + "`json:\"integration_type\"`" + `
