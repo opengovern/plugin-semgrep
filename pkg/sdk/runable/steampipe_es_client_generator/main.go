@@ -83,8 +83,8 @@ type {{ .Name }} struct {
 	PlatformID string ` + "`json:\"platform_id\"`" + `
 	Description   {{ .IntegrationType }}.{{ .Name }}Description 	` + "`json:\"description\"`" + `
 	Metadata      {{ .IntegrationType }}.Metadata 					` + "`json:\"metadata\"`" + `
-	DescribedBy int ` + "`json:\"described_by\"`" + `
-	ResourceType  string ` + "`json:\"resource_type\"`" + `
+	DescribedBy 	   string ` + "`json:\"described_by\"`" + `
+	ResourceType       string ` + "`json:\"resource_type\"`" + `
 	IntegrationType    string ` + "`json:\"integration_type\"`" + `
 	IntegrationID      string ` + "`json:\"integration_id\"`" + `
 }
