@@ -85,10 +85,10 @@ func main() {
 import (
 	"%[1]s/provider/describer"
 	"%[1]s/provider/configs"
-	model "github.com/opengovern/og-describer-azure/pkg/sdk/models"
+	model "github.com/opengovern/og-describer-%[2]s/pkg/sdk/models"
 )
 var ResourceTypes = map[string]model.ResourceType{
-`, configs.OGPluginRepoURL))
+`, configs.OGPluginRepoURL, configs.IntegrationTypeLower))
 
 	// Iterate over each resource type to build its string representations
 	for _, resourceType := range resourceTypes {
