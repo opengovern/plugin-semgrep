@@ -1,4 +1,4 @@
-package local
+package service
 
 import (
 	"github.com/opengovern/og-describer-template/pkg/sdk"
