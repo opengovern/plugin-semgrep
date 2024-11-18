@@ -124,9 +124,13 @@ func doDescribe(
 			return fmt.Errorf("unmarshal description: %v", err.Error())
 		}
 
-		tags, _, err := steampipe.ExtractTagsAndNames(logger, plg, job.ResourceType, resource)
-		if err != nil {
-			logger.Error("failed to build tags for service", zap.Error(err), zap.String("resourceType", job.ResourceType), zap.Any("resource", resource))
+		tags := make(map[string]string)
+
+		if plg != nil {
+			tags, _, err = steampipe.ExtractTagsAndNames(logger, plg, job.ResourceType, resource)
+			if err != nil {
+				logger.Error("failed to build tags for service", zap.Error(err), zap.String("resourceType", job.ResourceType), zap.Any("resource", resource))
+			}
 		}
 
 		var description any
