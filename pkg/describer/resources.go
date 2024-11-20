@@ -69,3 +69,30 @@ func describe(ctx context.Context, logger *zap.Logger, accountCfg configs.Integr
 
 	return resourceTypeObject.ListDescriber(ctx, accountCfg, triggerType, additionalParameters, stream)
 }
+
+func GetSingleResource(
+	ctx context.Context,
+	logger *zap.Logger,
+	resourceType string,
+	triggerType enums.DescribeTriggerType,
+	cfg configs.IntegrationCredentials,
+	additionalParameters map[string]string,
+	resourceId string,
+	stream *model.StreamSender,
+) error {
+	_, err := describeSingle(ctx, logger, cfg, resourceType, resourceId, triggerType, additionalParameters, stream)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func describeSingle(ctx context.Context, logger *zap.Logger, accountCfg configs.IntegrationCredentials, resourceType string, resourceID string, triggerType enums.DescribeTriggerType, additionalParameters map[string]string, stream *model.StreamSender) (*model.Resource, error) {
+	resourceTypeObject, ok := provider.ResourceTypes[resourceType]
+	if !ok {
+		return nil, fmt.Errorf("unsupported resource type: %s", resourceType)
+	}
+	ctx = describer.WithLogger(ctx, logger)
+
+	return resourceTypeObject.GetDescriber(ctx, accountCfg, triggerType, resourceID, additionalParameters)
+}
