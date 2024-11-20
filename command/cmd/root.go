@@ -31,4 +31,5 @@ func Execute() {
 
 func init() {
 	rootCmd.AddCommand(describerCmd)
+	rootCmd.AddCommand(getDescriberCmd)
 }
