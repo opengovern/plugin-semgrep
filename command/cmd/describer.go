@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -17,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -24,6 +22,7 @@ import (
 
 var (
 	resourceType string
+	outputFile   string
 )
 
 // describerCmd represents the describer command
@@ -31,6 +30,12 @@ var describerCmd = &cobra.Command{
 	Use:   "describer",
 	Short: "A brief description of your command",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		// Open the output file
+		file, err := os.Create(outputFile)
+		if err != nil {
+			return fmt.Errorf("failed to create file: %w", err)
+		}
+		defer file.Close() // Ensure the file is closed at the end
 
 		job := describe.DescribeJob{
 			JobID:                  uint(uuid.New().ID()),
@@ -75,7 +80,7 @@ var describerCmd = &cobra.Command{
 			}
 			err = provider.AdjustResource(job, &resource)
 			if err != nil {
-				return fmt.Errorf("failed to get resource metadata")
+				return fmt.Errorf("failed to adjust resource metadata")
 			}
 
 			desc := resource.Description
@@ -98,7 +103,7 @@ var describerCmd = &cobra.Command{
 				return fmt.Errorf("failed to parse resource description json")
 			}
 
-			fmt.Println(es.Resource{
+			res := es.Resource{
 				PlatformID:      fmt.Sprintf("%s:::%s:::%s", job.IntegrationID, job.ResourceType, resource.UniqueID()),
 				ResourceID:      resource.UniqueID(),
 				ResourceName:    resource.Name,
@@ -109,7 +114,22 @@ var describerCmd = &cobra.Command{
 				Metadata:        metadata,
 				DescribedAt:     job.DescribedAt,
 				DescribedBy:     strconv.FormatUint(uint64(job.JobID), 10),
-			})
+			}
+
+			// Write the resource JSON to the file
+			resJSON, err := json.Marshal(res)
+			if err != nil {
+				return fmt.Errorf("failed to marshal resource JSON: %w", err)
+			}
+			_, err = file.Write(resJSON)
+			if err != nil {
+				return fmt.Errorf("failed to write to file: %w", err)
+			}
+			_, err = file.Write([]byte(",\n")) // Add a newline for readability
+			if err != nil {
+				return fmt.Errorf("failed to write newline to file: %w", err)
+			}
+
 			return nil
 		}
 		clientStream := (*model.StreamSender)(&f)
@@ -132,6 +152,7 @@ var describerCmd = &cobra.Command{
 
 func init() {
 	describerCmd.Flags().StringVar(&resourceType, "resourceType", "", "Resource type")
+	describerCmd.Flags().StringVar(&outputFile, "outputFile", "output.json", "File to write JSON outputs")
 }
 
 func trimJsonFromEmptyObjects(input []byte) ([]byte, error) {
