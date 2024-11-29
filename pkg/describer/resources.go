@@ -94,5 +94,5 @@ func describeSingle(ctx context.Context, logger *zap.Logger, accountCfg configs.
 	}
 	ctx = describer.WithLogger(ctx, logger)
 
-	return resourceTypeObject.GetDescriber(ctx, accountCfg, triggerType, resourceID, additionalParameters)
+	return resourceTypeObject.GetDescriber(ctx, accountCfg, triggerType, additionalParameters, resourceID)
 }
