@@ -81,7 +81,7 @@ func main() {
 type {{ .Name }} struct {
 	ResourceID string ` + "`json:\"resource_id\"`" + `
 	PlatformID string ` + "`json:\"platform_id\"`" + `
-	Description   {{ .IntegrationType }}.{{ .Name }}Description 	` + "`json:\"description\"`" + `
+	Description   {{ .IntegrationType }}.{{ .Name }}Description 	` + "`json:\"Description\"`" + `
 	Metadata      {{ .IntegrationType }}.Metadata 					` + "`json:\"metadata\"`" + `
 	DescribedBy 	   string ` + "`json:\"described_by\"`" + `
 	ResourceType       string ` + "`json:\"resource_type\"`" + `
