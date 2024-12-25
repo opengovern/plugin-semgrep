@@ -78,29 +78,31 @@ You can define models for the resource you want to describe. The main model of t
 
 ```go
 type DatasetDescription struct {
-	ID                 string        `json:"id"`
-	Name               string        `json:"name"`
-	CreatedAt          time.Time     `json:"created_at"`
-	UpdatedAt          time.Time     `json:"updated_at"`
-	DatasetType        string        `json:"dataset_type"`
-	ValidationStatus   string        `json:"validation_status"`
-	ValidationError    string        `json:"validation_error"`
-	Schema             string        `json:"schema"`
-	RequiredFields     []string      `json:"required_fields"`
-	PreserveFields     []string      `json:"preserve_fields"`
-	DatasetParts       []DatasetPart `json:"dataset_parts"`
-	ValidationWarnings []string      `json:"validation_warnings"`
-	TotalUsage         float64       `json:"total_usage"`
+	ID                 string        
+	Name               string        
+	CreatedAt          time.Time     
+	UpdatedAt          time.Time     
+	DatasetType        string        
+	ValidationStatus   string        
+	ValidationError    string        
+	Schema             string        
+	RequiredFields     []string      
+	PreserveFields     []string      
+	DatasetParts       []DatasetPart 
+	ValidationWarnings []string      
+	TotalUsage         float64       
 }
 
 type DatasetPart struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID   string 
+	Name string 
 }
 
 ```
 
 All models without `Description` suffix should be used for the response of the Provider API and they will be ignored in the main files.
+
+**Note:** Please Do not add `json:"-"` tag to the models which has Description suffix. Also any model refrenced in these models.
 
 ## 5. Run the auto generators
 
@@ -147,6 +149,7 @@ Add you function to [plugin.go] file in the [plugin.go](./plugin/cohereai/plugin
 Build the plugin with the [Dockefile](./plugin/cohereai/Dockerfile) and run the plugin with the following command:
 
 ## 9. Test the plugin
+
 You can import the plugin to steampipe and test it.
 
 
