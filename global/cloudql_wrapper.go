@@ -2,17 +2,12 @@ package global
 
 import (
 	"context"
-	"github.com/opengovern/og-describer-template/cloudql/github"
+	"github.com/opengovern/og-describer-template/cloudql/template"
 	"github.com/opengovern/og-describer-template/global/maps"
-
 	"strings"
-
 	"go.uber.org/zap"
-
 	"github.com/hashicorp/go-hclog"
-
 	"fmt"
-
 	"github.com/opengovern/og-util/pkg/steampipe"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/context_key"
@@ -36,7 +31,7 @@ func ExtractTableName(resourceType string) string {
 }
 
 func Plugin() *plugin.Plugin {
-	return github.Plugin(buildContext())
+	return template.Plugin(buildContext())
 }
 
 func ExtractTagsAndNames(logger *zap.Logger, plg *plugin.Plugin, resourceType string, source interface{}) (map[string]string, string, error) {

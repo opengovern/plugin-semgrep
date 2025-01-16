@@ -13,7 +13,7 @@ import (
 // ListArtifactDockerFiles performs a single code search across the organization
 // for "filename:Dockerfile" and processes each result. Each Dockerfile is
 // streamed immediately upon processing, and also added to the final slice.
-func ListArtifactDockerFiles(
+func ListType(
 	ctx context.Context,
 	client model.Client,
 	extra string,

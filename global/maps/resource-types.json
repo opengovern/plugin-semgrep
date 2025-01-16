@@ -1,19 +1,24 @@
 [
-  {
-    "ResourceName": "Github/Container/Package",
-    "Tags": {
-      "category": ["package"]
-    },
-    "ListDescriber": "DescribeByIntegration(describers.GetContainerPackageList)",
-    "GetDescriber": "",
-    "SteampipeTable": "github_container_package",
-    "Model": "ContainerPackage",
-    "Params": [
-      {
-        "Name": "organization",
-        "Description": "Please provide the organization name",
-        "Required": false
-      }
-    ]
-  }
+ {
+   "ResourceName": "Github/Artifact/DockerFile",
+   "Tags": {
+     "category": ["artifact_dockerfile"]
+   },
+   "ListDescriber": "DescribeByIntegration(describers.ListType)",
+   "GetDescriber": "",
+   "SteampipeTable": "template_artifact_dockerfile",
+   "Model": "ArtifactDockerFile",
+   "Params": [
+     {
+       "Name": "repository",
+       "Description": "Please provide the repo name (i.e. internal-tools)",
+       "Required": false
+     },
+     {
+       "Name": "organization",
+       "Description": "Please provide the organization name",
+       "Required": false
+     }
+   ]
+ }
 ]

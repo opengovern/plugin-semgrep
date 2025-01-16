@@ -1,4 +1,4 @@
-package github
+package template
 
 import (
 	opengovernance "github.com/opengovern/og-describer-template/discovery/pkg/es"

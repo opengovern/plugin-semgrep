@@ -7,14 +7,13 @@ package provider
 
 type Metadata struct{}
 
-type ArtifactDescription struct {
-	ID                 int64
-	NodeID             *string
-	Name               *string
-	SizeInBytes        int64
-	ArchiveDownloadURL *string
-	Expired            bool
-	CreatedAt          *string
-	ExpiresAt          *string
-	RepoFullName       *string
+type ArtifactDockerFileDescription struct {
+	Sha  *string
+	Name *string
+	LastUpdatedAt *string
+	HTMLURL *string
+	DockerfileContent       string
+	DockerfileContentBase64 *string
+	Repository              map[string]interface{}
+	Images                  []string 
 }

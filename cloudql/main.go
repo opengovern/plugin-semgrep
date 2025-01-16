@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	plugin.Serve(&plugin.ServeOpts{PluginFunc: github.Plugin})
+	plugin.Serve(&plugin.ServeOpts{PluginFunc: template.Plugin})
 }

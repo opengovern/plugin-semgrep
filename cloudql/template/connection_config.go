@@ -1,4 +1,4 @@
-package github
+package template
 
 import (
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"

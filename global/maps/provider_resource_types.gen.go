@@ -7,17 +7,18 @@ import (
 	model "github.com/opengovern/og-describer-template/discovery/pkg/models"
 )
 var ResourceTypes = map[string]model.ResourceType{
-"Github/Container/Package": {
+
+	"Github/Artifact/DockerFile": {
 		IntegrationType:      constants.IntegrationName,
-		ResourceName:         "Github/Container/Package",
+		ResourceName:         "Github/Artifact/DockerFile",
 		Tags:                 map[string][]string{
-            "category": {"package"},
+            "category": {"artifact_dockerfile"},
         },
 		Labels:               map[string]string{
         },
 		Annotations:          map[string]string{
         },
-		ListDescriber:        provider.DescribeByIntegration(describers.GetContainerPackageList),
+		ListDescriber:        provider.DescribeByIntegration(describers.ListType),
 		GetDescriber:         nil,
 	},
 }
@@ -25,9 +26,8 @@ var ResourceTypes = map[string]model.ResourceType{
 
 var ResourceTypeConfigs = map[string]*interfaces.ResourceTypeConfiguration{
 
-	
-	"Github/Container/Package": {
-		Name:         "Github/Container/Package",
+	"Github/Artifact/DockerFile": {
+		Name:         "Github/Artifact/DockerFile",
 		IntegrationType:      constants.IntegrationName,
 		Description:                 "",
 		Params:           	[]interfaces.Param{
@@ -37,15 +37,19 @@ var ResourceTypeConfigs = map[string]*interfaces.ResourceTypeConfiguration{
 				Required:    false,
 				Default:     nil,
 			},
+			
+			{
+				Name:  "repository",
+				Description: "Please provide the repo name (i.e. internal-tools)",
+				Required:    false,
+				Default:     nil,
+			},
 			      },
 		
 	},
-
-
 }
 
 
 var ResourceTypesList = []string{
-  "Github/Actions/Artifact",
-
+  "Github/Artifact/DockerFile",
 }
