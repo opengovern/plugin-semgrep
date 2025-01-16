@@ -151,13 +151,3 @@ Build the plugin with the [Dockefile](./plugin/cohereai/Dockerfile) and run the 
 ## 9. Test the plugin
 
 You can import the plugin to steampipe and test it.
-
-
-
-
-
-
-
-
-
-

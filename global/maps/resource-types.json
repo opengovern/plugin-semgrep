@@ -1,0 +1,451 @@
+[
+  {
+    "ResourceName": "Github/Actions/Artifact",
+    "Tags": {
+      "category": [
+        "Action"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllArtifacts)",
+    "GetDescriber": "DescribeSingleByRepo(describers.GetArtifact)",
+    "SteampipeTable": "github_actions_artifact",
+    "Model": "Artifact"
+  },
+  {
+    "ResourceName": "Github/Actions/Runner",
+    "Tags": {
+      "category": [
+        "Action"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllRunners)",
+    "GetDescriber": "DescribeSingleByRepo(describers.GetActionRunner)",
+    "SteampipeTable": "github_actions_runner",
+    "Model": "Runner"
+  },
+  {
+    "ResourceName": "Github/Actions/Secret",
+    "Tags": {
+      "category": [
+        "Action"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllSecrets)",
+    "GetDescriber": "DescribeSingleByRepo(describers.GetRepoActionSecret)",
+    "SteampipeTable": "github_actions_secret",
+    "Model": "Secret"
+  },
+  {
+    "ResourceName": "Github/Actions/WorkflowRun",
+    "Tags": {
+      "category": ["Action"]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllWorkflowRuns)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_actions_workflow_run",
+    "Model": "WorkflowRun",
+    "Params": [
+      {
+        "Name": "repository",
+        "Description": "Please provide the repo name (i.e. internal-tools)",
+        "Required": false
+      },
+      {
+        "Name": "organization",
+        "Description": "Please provide the organization name",
+        "Required": false
+      },
+      {
+        "Name": "run_number",
+        "Description": "Please provide the run number",
+        "Required": false
+      }
+    ]
+  },
+  {
+    "ResourceName": "Github/Branch",
+    "Tags": {
+      "category": [
+        "Branch"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllBranches)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_branch",
+    "Model": "Branch"
+  },
+  {
+    "ResourceName": "Github/Branch/Protection",
+    "Tags": {
+      "category": [
+        "Branch"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllBranchProtections)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_branch_protection",
+    "Model": "BranchProtection"
+  },
+  {
+    "ResourceName": "Github/Commit",
+    "Tags": {
+      "category": [
+        "Commit"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.ListCommits)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_commit",
+    "Model": "Commit"
+  },
+  {
+    "ResourceName": "Github/Issue",
+    "Tags": {
+      "category": [
+        "Issue"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetIssueList)",
+    "GetDescriber": "DescribeSingleByRepo(describers.GetIssue)",
+    "SteampipeTable": "github_issue",
+    "Model": "Issue"
+  },
+  {
+    "ResourceName": "Github/License",
+    "Tags": {
+      "category": [
+        "License"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetLicenseList)",
+    "GetDescriber": "DescribeSingleByRepo(describers.GetLicense)",
+    "SteampipeTable": "github_license",
+    "Model": "License"
+  },
+  {
+    "ResourceName": "Github/Organization",
+    "Tags": {
+      "category": [
+        "Organization"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetOrganizationList)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_organization",
+    "Model": "Organization"
+  },
+  {
+    "ResourceName": "Github/Organization/Collaborator",
+    "Tags": {
+      "category": [
+        "Organization"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllOrganizationsCollaborators)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_organization_collaborator",
+    "Model": "OrgCollaborators"
+  },
+  {
+    "ResourceName": "Github/Organization/Dependabot/Alert",
+    "Tags": {
+      "category": [
+        "Organization"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllOrganizationsDependabotAlerts)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_organization_dependabot_alert",
+    "Model": "OrgAlertDependabot"
+  },
+  {
+    "ResourceName": "Github/Organization/Member",
+    "Tags": {
+      "category": [
+        "Organization"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllMembers)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_organization_member",
+    "Model": "OrgMembers"
+  },
+  {
+    "ResourceName": "Github/Organization/Team",
+    "Tags": {
+      "category": [
+        "Organization"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetOrganizationTeamList)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_organization_team",
+    "Model": "Team"
+  },
+  {
+    "ResourceName": "Github/PullRequest",
+    "Tags": {
+      "category": ["PullRequest"]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllPullRequests)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_pull_request",
+    "Model": "PullRequest",
+    "Params": [
+      {
+        "Name": "organization",
+        "Description": "Please provide the organization name",
+        "Required": false
+      },
+      {
+        "Name": "repository",
+        "Description": "Please provide the repo name (i.e. internal-tools)",
+        "Required": false
+      }
+    ]
+  },
+  {
+    "ResourceName": "Github/Release",
+    "Tags": {
+      "category": [
+        "Release"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetReleaseList)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_release",
+    "Model": "Release"
+  },
+  {
+    "ResourceName": "Github/Repository",
+    "Tags": {
+      "category": ["Repository"]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetRepositoryList)",
+    "GetDescriber": "DescribeSingleByRepo(describers.GetRepository)",
+    "SteampipeTable": "github_repository",
+    "Model": "Repository",
+    "Params": [
+      {
+        "Name": "repository",
+        "Description": "Please provide the repo name (i.e. internal-tools)",
+        "Required": false
+      },
+      {
+        "Name": "organization",
+        "Description": "Please provide the organization name",
+        "Required": false
+      }
+    ]
+  },
+  {
+    "ResourceName": "Github/Repository/Collaborator",
+    "Tags": {
+      "category": [
+        "Repository"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllRepositoriesCollaborators)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_repository_collaborator",
+    "Model": "RepoCollaborators"
+  },
+  {
+    "ResourceName": "Github/Repository/DependabotAlert",
+    "Tags": {
+      "category": [
+        "Repository"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllRepositoriesDependabotAlerts)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_repository_dependabot_alert",
+    "Model": "RepoAlertDependabot"
+  },
+  {
+    "ResourceName": "Github/Repository/Deployment",
+    "Tags": {
+      "category": [
+        "Repository"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllRepositoriesDeployments)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_repository_deployment",
+    "Model": "RepoDeployment"
+  },
+  {
+    "ResourceName": "Github/Repository/Environment",
+    "Tags": {
+      "category": [
+        "Repository"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllRepositoriesEnvironments)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_repository_environment",
+    "Model": "RepoEnvironment"
+  },
+  {
+    "ResourceName": "Github/Repository/Ruleset",
+    "Tags": {
+      "category": [
+        "Repository"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllRepositoriesRuleSets)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_repository_ruleset",
+    "Model": "RepoRuleSet"
+  },
+  {
+    "ResourceName": "Github/Repository/SBOM",
+    "Tags": {
+      "category": [
+        "Repository"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllRepositoriesSBOMs)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_repository_sbom",
+    "Model": "RepoSBOM"
+  },
+  {
+    "ResourceName": "Github/Repository/VulnerabilityAlert",
+    "Tags": {
+      "category": [
+        "Repository"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllRepositoriesVulnerabilities)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_repository_vulnerability_alert",
+    "Model": "RepoVulnerabilityAlert"
+  },
+  {
+    "ResourceName": "Github/Tag",
+    "Tags": {
+      "category": [
+        "Tag"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllTags)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_tag",
+    "Model": "Tag"
+  },
+  {
+    "ResourceName": "Github/Team/Member",
+    "Tags": {
+      "category": [
+        "Team"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllTeamsMembers)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_team_member",
+    "Model": "TeamMembers"
+  },
+  {
+    "ResourceName": "Github/User",
+    "Tags": {
+      "category": [
+        "user"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetUser)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_user",
+    "Model": "User"
+  },
+  {
+    "ResourceName": "Github/Workflow",
+    "Tags": {
+      "category": [
+        "workflow"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetAllWorkflows)",
+    "GetDescriber": "DescribeSingleByRepo(describers.GetRepositoryWorkflow)",
+    "SteampipeTable": "github_workflow",
+    "Model": "Workflow"
+  },
+
+  {
+    "ResourceName": "Github/Container/Package",
+    "Tags": {
+      "category": [
+        "package"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetContainerPackageList)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_container_package",
+    "Model": "ContainerPackage",
+    "Params": [
+      {
+        "Name": "organization",
+        "Description": "Please provide the organization name",
+        "Required": false
+      }
+    ]
+  },
+  {
+    "ResourceName": "Github/Package/Maven",
+    "Tags": {
+      "category": [
+        "package"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetMavenPackageList)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_maven_package",
+    "Model": "PackageDetail"
+  },
+  {
+    "ResourceName": "Github/NPM/Package",
+    "Tags": {
+      "category": [
+        "package"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetNPMPackageList)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_npm_package",
+    "Model": "PackageDetail"
+  },
+  {
+    "ResourceName": "Github/Nuget/Package",
+    "Tags": {
+      "category": [
+        "package"
+      ]
+    },
+    "ListDescriber": "DescribeByGithub(describers.GetNugetPackageList)",
+    "GetDescriber": "DescribeSingleByRepo(describers.GetNugetPackage)",
+    "SteampipeTable": "github_nuget_package",
+    "Model": "Package"
+  },
+  {
+    "ResourceName": "Github/Artifact/DockerFile",
+    "Tags": {
+      "category": ["artifact_dockerfile"]
+    },
+    "ListDescriber": "DescribeByGithub(describers.ListArtifactDockerFiles)",
+    "GetDescriber": "",
+    "SteampipeTable": "github_artifact_dockerfile",
+    "Model": "ArtifactDockerFile",
+    "Params": [
+      {
+        "Name": "repository",
+        "Description": "Please provide the repo name (i.e. internal-tools)",
+        "Required": false
+      },
+      {
+        "Name": "organization",
+        "Description": "Please provide the organization name",
+        "Required": false
+      }
+    ]
+  }
+]

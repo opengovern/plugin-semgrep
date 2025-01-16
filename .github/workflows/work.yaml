@@ -1,0 +1,201 @@
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main", "dev"]
+
+jobs:
+  build:
+    environment: main
+    env:
+      GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+    runs-on: ubuntu-latest
+    outputs:
+      latest_tag: ${{ steps.set_latest_tag.outputs.latest_tag }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Install musl cc
+        uses: awalsh128/cache-apt-pkgs-action@v1.4.3
+        with:
+          packages: musl-tools musl-dev musl
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: './go.mod'
+          cache: false  # Disable built-in caching to use custom caching
+      - name: Tag Version
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GH_ACCESS_TOKEN }}
+          release_branches: main
+          tag_prefix: v
+      - name: Cache Go Modules and Build Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.mod') }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ hashFiles('**/go.mod') }}-
+            ${{ runner.os }}-go-
+      - name: Configure Git for Private Repos
+        run: |
+          git config --global url.https://$GH_ACCESS_TOKEN@github.com/opengovern.insteadOf https://github.com/opengovern
+      - name: Build Github Plugin App
+        working-directory: ./cloudql
+        run: make build
+      - name: Pack Github Plugin Build
+        working-directory: ./cloudql
+        run: |
+          tar -cvf build.tar build
+      - name: Upload Github Plugin Artifact
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: steampipe-plugin-github
+          path: ./cloudql/build.tar
+          retention-days: 1
+      - name: Build Local Describer App
+        working-directory: ./discovery
+        run: make build-describer
+      - name: Pack Local Describer Build
+        working-directory: ./discovery
+        run: |
+          tar -cvf local.tar local
+      - name: Upload Local Artifact
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: local-og-describer-template
+          path: ./discovery/local.tar
+          retention-days: 1
+      - name: Build Integration Plugin
+        working-directory: ./platform
+        run: make build
+      - name: Create output directory
+        working-directory: .
+        run: mkdir -p github-plugin
+      - name: Copy steampipe plugin to output directory
+        working-directory: .
+        run: cp ./cloudql/build/steampipe-plugin-github.plugin ./github-plugin/cloudql-plugin
+      - name: Copy integration plugin to output directory
+        working-directory: .
+        run: cp ./platform/build/integration-plugin ./github-plugin/
+      - name: Copy manifest to output directory
+        working-directory: .
+        run: cp ./platform/constants/manifest.yaml ./github-plugin/
+      - name: Pack output
+        working-directory: .
+        run: |
+          tar -czf github-plugin.tar github-plugin
+      - name: Upload github outputs artifact
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: github-plugins
+          path: ./github-plugin.tar
+          retention-days: 1
+
+      - name: Set Latest Tag Output
+        id: set_latest_tag
+        run: |
+          if [[ -z "${{ steps.tag_version.outputs.new_tag }}" ]]; then
+            echo "latest_tag=${{ steps.tag_version.outputs.previous_tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "latest_tag=${{ steps.tag_version.outputs.new_tag }}" >> "$GITHUB_OUTPUT"
+          fi
+  deploy-github-plugin:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    environment: main
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Download Github Plugin Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: steampipe-plugin-github
+          path: .
+      - name: Unpack Github Plugin Artifact
+        run: |
+          tar -xvf build.tar
+      - name: Log in to Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+      - name: Build and Push Docker Image for Github Plugin
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/steampipe-plugin-github:0.0.1
+            ghcr.io/${{ github.repository_owner }}/steampipe-plugin-github:${{ needs.build.outputs.latest_tag }}
+          file: cloudql/docker/Dockerfile
+          context: .
+  deploy-local-describer:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    environment: main
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Download Local Describer Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: local-og-describer-template
+          path: .
+      - name: Unpack Local Describer Artifact
+        run: |
+          tar -xvf local.tar
+      - name: Log in to Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+      - name: Build and Push Docker Image for Local Describer
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/og-describer-template:local-latest
+            ghcr.io/${{ github.repository_owner }}/og-describer-template:local-${{ needs.build.outputs.latest_tag }}
+          file: discovery/DockerFile
+          context: .
+  release-integration-plugin:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    environment: main
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Download Integration Plugin Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-plugins
+      - name: Unpack Integration Plugin Artifact
+        run: |
+          tar -xvf github-plugin.tar
+      - name: Pack folder content into a zip file for release
+        run: |
+          cd github-plugin
+          zip -r github-plugin.zip .
+      - name: Release Integration Plugin
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./github-plugin/github-plugin.zip
+          tag_name: ${{ needs.build.outputs.latest_tag }}
