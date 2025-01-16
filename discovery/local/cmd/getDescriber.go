@@ -21,9 +21,8 @@ import (
 
 var (
 	resourceID       string
-	PatToken         = os.Getenv("PAT_TOKEN")
-	RepositoryName   = os.Getenv("REPOSITORY_NAME")
-	OrganizationName = os.Getenv("ORGANIZATION_NAME")
+	PatToken         = os.Getenv("PAT_TOKEN") //example credes
+	OrganizationName = os.Getenv("ORGANIZATION_NAME") // example parameter
 )
 
 // getDescriberCmd represents the describer command
@@ -47,7 +46,7 @@ var getDescriberCmd = &cobra.Command{
 			IntegrationType: global.IntegrationTypeLower,
 			CipherText:      "",
 			IntegrationLabels: map[string]string{
-				"OrganizationName": OrganizationName,
+				"OrganizationName": OrganizationName, // example parameter
 			},
 			IntegrationAnnotations: nil,
 		}
@@ -67,7 +66,6 @@ var getDescriberCmd = &cobra.Command{
 			return err
 		}
 		plg := global.Plugin()
-		additionalParameters["RepositoryName"] = RepositoryName
 
 		f := func(resource model.Resource) error {
 			if resource.Description == nil {

@@ -17,7 +17,7 @@ var ResourceTypes = map[string]model.ResourceType{
         },
 		Annotations:          map[string]string{
         },
-		ListDescriber:        provider.DescribeByGithub(describers.GetContainerPackageList),
+		ListDescriber:        provider.DescribeByIntegration(describers.GetContainerPackageList),
 		GetDescriber:         nil,
 	},
 }

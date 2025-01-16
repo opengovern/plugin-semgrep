@@ -29,41 +29,25 @@ func tableGitHubArtifactDockerFile() *plugin.Table {
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("Description.Name"),
 				Description: "Name of the Dockerfile."},
-			//{
-			//	Name:        "path",
-			//	Type:        proto.ColumnType_STRING,
-			//	Transform:   transform.FromField("Description.Path"),
-			//	Description: "Path to the Dockerfile in the repository."},
+		
 			{
 				Name:        "last_updated_at",
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("Description.LastUpdatedAt"),
 				Description: "Last time the dockerfile updated"},
-			//{
-			//	Name:        "git_url",
-			//	Type:        proto.ColumnType_STRING,
-			//	Transform:   transform.FromField("Description.GitURL"),
-			//	Description: "Git URL where the Dockerfile can be accessed."},
+			
 			{
 				Name:        "html_url",
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("Description.HTMLURL"),
 				Description: "HTML URL where the Dockerfile can be accessed."},
-			//{
-			//	Name:        "uri",
-			//	Type:        proto.ColumnType_STRING,
-			//	Transform:   transform.FromField("Description.URI"),
-			//	Description: "Unique URI for the Dockerfile."},
+			
 			{
 				Name:        "dockerfile_content",
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("Description.DockerfileContent"),
 				Description: "Dockerfile content."},
-			//{
-			//	Name:        "dockerfile_content_base64",
-			//	Type:        proto.ColumnType_STRING,
-			//	Transform:   transform.FromField("Description.DockerfileContentBase64"),
-			//	Description: "Dockerfile content base64."},
+			
 			{
 				Name:        "repository",
 				Type:        proto.ColumnType_JSON,

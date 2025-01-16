@@ -32,8 +32,8 @@ var describerCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Environment takes priority
-		orgEnv := os.Getenv("GITHUB_ORG")
-		patEnv := os.Getenv("GITHUB_PAT")
+		orgEnv := os.Getenv("GITHUB_ORG") //example parameter
+		patEnv := os.Getenv("GITHUB_PAT") //example  credential
 
 		if orgEnv != "" {
 			OrganizationName = orgEnv
