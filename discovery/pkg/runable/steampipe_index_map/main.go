@@ -41,7 +41,7 @@ func main() {
 	}
 
 	if indexMap == nil || len(*indexMap) == 0 {
-		v := "global/maps/table_index_map.go"
+		v := "global/maps/table_index_map.gen.go"
 		indexMap = &v
 	}
 

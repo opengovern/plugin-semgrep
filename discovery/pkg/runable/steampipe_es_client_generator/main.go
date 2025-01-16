@@ -43,7 +43,7 @@ type ResourceType struct {
 
 func main() {
 	if output == nil || len(*output) == 0 {
-		v := "../../es/resources_clients.go"
+		v := "../../es/resources_clients.gen.go"
 		output = &v
 	}
 	if file == nil || len(*file) == 0 {

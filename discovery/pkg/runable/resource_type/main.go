@@ -89,7 +89,7 @@ func main() {
 
 	// Set default output paths if not provided
 	if output == nil || len(*output) == 0 {
-		v := "global/maps/provider_resource_types.go"
+		v := "global/maps/provider_resource_types.gen.go"
 		output = &v
 	}
 
