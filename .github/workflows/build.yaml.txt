@@ -69,6 +69,14 @@ jobs:
           name: local-og-describer-template
           path: ./discovery/local.tar
           retention-days: 1
+      - name: Add Tag to Release
+        run: |
+          echo "new_tag=${{ steps.tag_version.outputs.new_tag }}" >> "$GITHUB_OUTPUT"
+          export TAG=${{ steps.tag_version.outputs.new_tag }}
+          ./update-manifest.sh
+        working-directory: ./platform/constants
+      - name: Check manifest file
+        run: cat ./platform/constants/manifest.yaml
       - name: Build Integration Plugin
         working-directory: ./platform
         run: make build
