@@ -1,2 +1,5 @@
 IntegrationType: template 
 DescriberURL:  ghcr.io/opengovern/og-describer-template
+Publisher: opencomply.io
+Author : opencomply engineering team
+SupportedPlatformVersion: 2.x.x
