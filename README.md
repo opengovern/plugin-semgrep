@@ -1,6 +1,6 @@
-# OpenGovernance Describer Template
+# Plugin Template for opencomply
 
-This document is a GitHub repository temmplate for write describers for any Provider you want.
+This document is a GitHub repository template for writing custom Integration Plugins for Opencomply
 
 - [OpenGovernance Describer Template](#opengovernance-describer-template)
 - [Instructions](#instructions)
