@@ -2,9 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/opengovern/og-describer-template/global"
-	"github.com/opengovern/og-describer-template/global/maps"
-	"github.com/opengovern/og-describer-template/platform/constants"
+	"github.com/opengovern/og-describer-semgrep/global"
+	"github.com/opengovern/og-describer-semgrep/global/maps"
+	"github.com/opengovern/og-describer-semgrep/platform/constants"
 	"github.com/opengovern/og-util/pkg/integration"
 	"github.com/opengovern/og-util/pkg/integration/interfaces"
 )
@@ -19,7 +19,7 @@ func (i *Integration) GetConfiguration() (interfaces.IntegrationConfiguration, e
 		NatsConsumerGroup:        global.ConsumerGroup,
 		NatsConsumerGroupManuals: global.ConsumerGroupManuals,
 
-		SteampipePluginName: "template",
+		SteampipePluginName: "semgrep",
 
 		UISpec:   constants.UISpec,
 		Manifest: constants.Manifest,
@@ -56,18 +56,18 @@ func (i *Integration) DiscoverIntegrations(jsonData []byte) ([]integration.Integ
 }
 
 func (i *Integration) GetResourceTypesByLabels(labels map[string]string) ([]interfaces.ResourceTypeConfiguration, error) {
-	var resourceTypesMap  []interfaces.ResourceTypeConfiguration
+	var resourceTypesMap []interfaces.ResourceTypeConfiguration
 	for _, resourceType := range maps.ResourceTypesList {
-		var resource  interfaces.ResourceTypeConfiguration
+		var resource interfaces.ResourceTypeConfiguration
 		if v, ok := maps.ResourceTypeConfigs[resourceType]; ok {
-			resource.Description =v.Description
-			resource.Params =v.Params
+			resource.Description = v.Description
+			resource.Params = v.Params
 			resource.Name = v.Name
 			resource.IntegrationType = v.IntegrationType
-			resource.Table =  maps.ResourceTypesToTables[v.Name]
+			resource.Table = maps.ResourceTypesToTables[v.Name]
 			resourceTypesMap = append(resourceTypesMap, resource)
-			
-		} 
+
+		}
 	}
 	return resourceTypesMap, nil
 }

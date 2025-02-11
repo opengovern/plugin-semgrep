@@ -5,9 +5,9 @@ package orchestrator
 import (
 	"context"
 	"fmt"
-	model "github.com/opengovern/og-describer-template/discovery/pkg/models"
-	"github.com/opengovern/og-describer-template/discovery/describers"
-	"github.com/opengovern/og-describer-template/global/maps"
+	model "github.com/opengovern/og-describer-semgrep/discovery/pkg/models"
+	"github.com/opengovern/og-describer-semgrep/discovery/provider"
+	"github.com/opengovern/og-describer-semgrep/global/maps"
 	"github.com/opengovern/og-util/pkg/describe/enums"
 	"go.uber.org/zap"
 	"sort"
@@ -64,7 +64,7 @@ func describe(ctx context.Context, logger *zap.Logger, accountCfg model.Integrat
 	if !ok {
 		return nil, fmt.Errorf("unsupported resource type: %s", resourceType)
 	}
-	ctx = describers.WithLogger(ctx, logger)
+	ctx = provider.WithLogger(ctx, logger)
 
 	return resourceTypeObject.ListDescriber(ctx, accountCfg, triggerType, additionalParameters, stream)
 }
@@ -91,7 +91,7 @@ func describeSingle(ctx context.Context, logger *zap.Logger, accountCfg model.In
 	if !ok {
 		return nil, fmt.Errorf("unsupported resource type: %s", resourceType)
 	}
-	ctx = describers.WithLogger(ctx, logger)
+	ctx = provider.WithLogger(ctx, logger)
 
 	return resourceTypeObject.GetDescriber(ctx, accountCfg, triggerType, additionalParameters, resourceID, stream)
 }

@@ -3,3 +3,4 @@ og-describer-*
 .idea
 .env
 .vscode
+output.json

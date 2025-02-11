@@ -1,27 +1,22 @@
-package template
+package tailscale
 
 import (
 	"context"
-
 	essdk "github.com/opengovern/og-util/pkg/opengovernance-es-sdk"
 
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
-// Plugin returns this plugin
 func Plugin(ctx context.Context) *plugin.Plugin {
 	p := &plugin.Plugin{
-		Name: "steampipe-plugin-github",
+		Name: "steampipe-plugin-semgrep",
 		ConnectionConfigSchema: &plugin.ConnectionConfigSchema{
 			NewInstance: essdk.ConfigInstance,
 			Schema:      essdk.ConfigSchema(),
 		},
 		DefaultTransform: transform.FromCamel(),
-		TableMap: map[string]*plugin.Table{
-			
-			"github_artifact_dockerfile": tableGitHubArtifactDockerFile(),
-		},
+		TableMap:         map[string]*plugin.Table{},
 	}
 	for key, table := range p.TableMap {
 		if table == nil {

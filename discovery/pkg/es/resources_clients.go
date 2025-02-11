@@ -3,7 +3,7 @@ package opengovernance
 
 import (
 	"context"
-	template "github.com/opengovern/og-describer-template/discovery/provider"
+	template "github.com/opengovern/og-describer-semgrep/discovery/provider"
 	essdk "github.com/opengovern/og-util/pkg/opengovernance-es-sdk"
 	steampipesdk "github.com/opengovern/og-util/pkg/steampipe"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
@@ -17,14 +17,13 @@ type Client struct {
 // ==========================  START: ArtifactDockerFile =============================
 
 type ArtifactDockerFile struct {
-	ResourceID      string                                 `json:"resource_id"`
-	PlatformID      string                                 `json:"platform_id"`
-	Description     template.ArtifactDockerFileDescription `json:"Description"`
-	Metadata        template.Metadata                      `json:"metadata"`
-	DescribedBy     string                                 `json:"described_by"`
-	ResourceType    string                                 `json:"resource_type"`
-	IntegrationType string                                 `json:"integration_type"`
-	IntegrationID   string                                 `json:"integration_id"`
+	ResourceID      string            `json:"resource_id"`
+	PlatformID      string            `json:"platform_id"`
+	Metadata        template.Metadata `json:"metadata"`
+	DescribedBy     string            `json:"described_by"`
+	ResourceType    string            `json:"resource_type"`
+	IntegrationType string            `json:"integration_type"`
+	IntegrationID   string            `json:"integration_id"`
 }
 
 type ArtifactDockerFileHit struct {

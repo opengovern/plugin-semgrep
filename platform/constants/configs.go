@@ -13,10 +13,10 @@ var Manifest []byte
 var SetupMd []byte
 
 const (
-	IntegrationName = integration.Type("template") // example: aws_cloud, azure_subscription, github_account
+	IntegrationName = integration.Type("semgrep_account") // example: aws_cloud, azure_subscription, github_account
 )
 
 const (
-	DescriberDeploymentName = "og-describer-template"
-	DescriberRunCommand     = "/og-describer-template"
+	DescriberDeploymentName = "og-describer-semgrep"
+	DescriberRunCommand     = "/og-describer-semgrep"
 )

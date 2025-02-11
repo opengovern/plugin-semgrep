@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/opengovern/og-describer-template/global"
+	"github.com/opengovern/og-describer-semgrep/global"
 	"github.com/opengovern/og-util/pkg/es"
 	"github.com/opengovern/og-util/proto/src/golang"
 	"go.uber.org/zap"

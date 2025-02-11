@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/opengovern/og-describer-template/global"
+	"github.com/opengovern/og-describer-semgrep/global"
 	"go/ast"
 	"go/format"
 	"go/parser"
@@ -23,7 +23,7 @@ var (
 	pluginPath        = flag.String("pluginPath", "", "Location of the steampipe plugin")
 )
 
-var PluginPath = fmt.Sprintf("../../../../cloudql/"+global.IntegrationTypeLower)
+var PluginPath = fmt.Sprintf("../../../../cloudql/" + global.IntegrationTypeLower)
 
 type IntegrationType struct {
 	Name            string

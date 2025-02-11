@@ -1,15 +1,12 @@
 package provider
 
 import (
-
-	model "github.com/opengovern/og-describer-template/discovery/pkg/models"
+	model "github.com/opengovern/og-describer-semgrep/discovery/pkg/models"
 	"github.com/opengovern/og-util/pkg/describe/enums"
 	"golang.org/x/net/context"
 )
 
-
 type Client struct {
-	
 }
 
 // DescribeByIntegration TODO: implement a wrapper to pass integration authorization to describer functions

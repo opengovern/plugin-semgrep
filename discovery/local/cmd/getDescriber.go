@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/opengovern/og-describer-template/discovery/pkg/orchestrator"
-	model "github.com/opengovern/og-describer-template/discovery/pkg/models"
-	"github.com/opengovern/og-describer-template/discovery/provider"
-	"github.com/opengovern/og-describer-template/global"
+	model "github.com/opengovern/og-describer-semgrep/discovery/pkg/models"
+	"github.com/opengovern/og-describer-semgrep/discovery/pkg/orchestrator"
+	"github.com/opengovern/og-describer-semgrep/discovery/provider"
+	"github.com/opengovern/og-describer-semgrep/global"
 	"github.com/opengovern/og-util/pkg/describe"
 	"github.com/opengovern/og-util/pkg/es"
 	"github.com/spf13/cobra"
@@ -21,7 +21,7 @@ import (
 
 var (
 	resourceID       string
-	PatToken         = os.Getenv("PAT_TOKEN") //example credes
+	PatToken         = os.Getenv("PAT_TOKEN")         //example credes
 	OrganizationName = os.Getenv("ORGANIZATION_NAME") // example parameter
 )
 

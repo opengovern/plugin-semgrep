@@ -10,7 +10,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/opengovern/og-describer-template/global"
+	"github.com/opengovern/og-describer-semgrep/global"
 	"github.com/opengovern/og-util/pkg/integration/interfaces"
 )
 
@@ -27,8 +27,8 @@ type ResourceType struct {
 	Labels            map[string]string
 	AnnotationsString string `json:"-"`
 	LabelsString      string `json:"-"`
-	Params []interfaces.Param
-	ParamsString	string  	`json:"-"`
+	Params            []interfaces.Param
+	ParamsString      string `json:"-"`
 }
 
 var (
@@ -72,7 +72,6 @@ func main() {
 		panic(err)
 	}
 
-
 	// Define the template with Labels and Annotations included
 	paramtmpl, err := template.New("").Parse(fmt.Sprintf(`
 	"{{ .ResourceName }}": {
@@ -93,8 +92,6 @@ func main() {
 		output = &v
 	}
 
-	
-
 	// Initialize a strings.Builder to construct the output file content
 	b := &strings.Builder{}
 	b.WriteString(fmt.Sprintf(`package maps
@@ -106,7 +103,7 @@ import (
 	model "github.com/opengovern/og-describer-%[2]s/discovery/pkg/models"
 )
 var ResourceTypes = map[string]model.ResourceType{
-`, global.OGPluginRepoURL, global.IntegrationTypeLower,))
+`, global.OGPluginRepoURL, global.IntegrationTypeLower))
 
 	// Iterate over each resource type to build its string representations
 	for _, resourceType := range resourceTypes {
@@ -192,7 +189,7 @@ var ResourceTypeConfigs = map[string]*interfaces.ResourceTypeConfiguration{
 		for _, v := range resourceType.Params {
 			var defaultVal string
 
-						if v.Default == nil {
+			if v.Default == nil {
 				defaultVal = `nil` // Set empty string if Default is nil
 			} else {
 				defaultVal = fmt.Sprintf(`"%s"`, *v.Default) // Dereference the pointer and format it
@@ -204,22 +201,20 @@ var ResourceTypeConfigs = map[string]*interfaces.ResourceTypeConfiguration{
 				Required:    %[3]t,
 				Default:     %[4]s,
 			},
-			`,v.Name,v.Description,v.Required,defaultVal)
-			paramLines = append(paramLines, fmt.Sprintf("%s",param))
+			`, v.Name, v.Description, v.Required, defaultVal)
+			paramLines = append(paramLines, fmt.Sprintf("%s", param))
 		}
 		sort.Strings(paramLines) // Sort for consistency
 		for _, l := range paramLines {
 			paramStringBuilder.WriteString(l)
 		}
 		paramStringBuilder.WriteString("      },")
-		resourceType.ParamsString =paramStringBuilder.String()
+		resourceType.ParamsString = paramStringBuilder.String()
 		err = paramtmpl.Execute(b, resourceType)
 		if err != nil {
 			panic(err)
 		}
 	}
-
-
 
 	b.WriteString("}\n")
 
@@ -239,10 +234,9 @@ var ResourceTypesList = []string{
 	}
 
 	// Generate the index map file as before
-	
 
 	// Write the index map to the specified file
-	
+
 }
 
 // escapeString ensures that any quotes in the strings are properly escaped
