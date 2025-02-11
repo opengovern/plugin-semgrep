@@ -1,4 +1,4 @@
-package tailscale
+package semgrep
 
 import (
 	"context"
@@ -16,7 +16,13 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			Schema:      essdk.ConfigSchema(),
 		},
 		DefaultTransform: transform.FromCamel(),
-		TableMap:         map[string]*plugin.Table{},
+		TableMap: map[string]*plugin.Table{
+			"semgrep_deployment": tableSemGrepDeployment(ctx),
+			"semgrep_project":    tableSemGrepProject(ctx),
+			"semgrep_policy":     tableSemGrepPolicy(ctx),
+			"semgrep_scan":       tableSemGrepScan(ctx),
+			"semgrep_finding":    tableSemGrepFinding(ctx),
+		},
 	}
 	for key, table := range p.TableMap {
 		if table == nil {

@@ -1,108 +1,47 @@
 {
-  "integration_type_id": "github_account",
-  "integration_name": "GitHub Account",
-  "help_text_md": "GitHub Account integration allows secure connections to your GitHub organizations. [Documentation](https://docs.github.com/en).",
-  "platform_documentation": "https://docs.github.com/en",
-  "provider_documentation": "https://github.com",
-  "icon": "github.svg",
+  "integration_type_id": "semgrep_account",
+  "integration_name": "Semgrep Account",
+  "help_text_md": "",
+  "platform_documentation": "https://semgrep.dev/api/v1/docs",
+  "provider_documentation": "https://semgrep.dev",
+  "icon": "semgrep.svg",
   "discover": {
     "credentials": [
       {
-        "type": "classic_pat",
-        "label": "Classic Personal Access Token (PAT)",
+        "type": "token",
+        "label": "Access Token",
         "priority": 1,
         "fields": [
           {
-            "name": "pat_token",
-            "label": "Personal Access Token",
+            "name": "token",
+            "label": "Access Token",
             "inputType": "password",
             "required": true,
             "order": 1,
             "validation": {
               "pattern": "^[a-zA-Z0-9]{100}$",
-              "errorMessage": "Personal Access Token must be a 100-character alphanumeric string."
+              "errorMessage": ""
             },
-            "info": "Your GitHub Personal Access Token with appropriate scopes.",
-            "external_help_url": "https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token"
+            "info": "Your Semgrep Access Token with appropriate scopes.",
+            "external_help_url": "https://semgrep.dev/login?return_path=/orgs/-/settings/tokens"
+          },
+          {
+            "name": "organization",
+            "label": "Organization",
+            "inputType": "text",
+            "required": true,
+            "order": 1,
+            "validation": {
+              "pattern": "^[a-zA-Z0-9]{100}$",
+              "errorMessage": ""
+            },
+            "info": "Your Semgrep organization",
+            "external_help_url": ""
           }
         ]
       }
     ],
     "integrations": [
-      {
-        "label": "GitHub Organization",
-        "type": "github_organization",
-        "fields": [
-          {
-            "name": "uuid",
-            "label": "Integration UUID",
-            "fieldType": "text",
-            "required": true,
-            "order": 1,
-            "info": "Unique identifier (UUID) for the integration."
-          },
-          {
-            "name": "organization_name",
-            "label": "Organization Name",
-            "fieldType": "text",
-            "required": true,
-            "order": 2,
-            "info": "Name of the GitHub organization."
-          },
-          {
-            "name": "credential_type",
-            "label": "Credential Type",
-            "fieldType": "text",
-            "required": true,
-            "order": 3,
-            "info": "Type of Credential used (Classic PAT).",
-            "valueMap": {
-              "classic_pat": "Classic Personal Access Token (PAT)"
-            }
-          },
-          {
-            "name": "state",
-            "label": "State",
-            "fieldType": "status",
-            "required": true,
-            "order": 4,
-            "info": "Current state of the GitHub Organization integration.",
-            "statusOptions": [
-              {
-                "value": "ACTIVE",
-                "label": "Active",
-                "color": "green"
-              },
-              {
-                "value": "INACTIVE",
-                "label": "Inactive",
-                "color": "red"
-              },
-              {
-                "value": "ARCHIVED",
-                "label": "Archived",
-                "color": "blue"
-              }
-            ]
-          },
-          {
-            "name": "created_at",
-            "label": "Created At",
-            "fieldType": "date",
-            "required": true,
-            "order": 5,
-            "info": "Timestamp when the integration was created."
-          },
-          {
-            "name": "last_updated",
-            "label": "Last Updated",
-            "fieldType": "date",
-            "required": true,
-            "order": 6,
-            "info": "Timestamp when the integration was last updated."
-          }
-        ]
-      }
     ]
   },
   "render": {
@@ -143,17 +82,31 @@
           "detail_order": 3
         },
         {
+          "name": "integration_count",
+          "label": "Integration Count",
+          "fieldType": "text",
+          "order": 4,
+          "sortable": true,
+          "filterable": true,
+          "show": true,
+          "info": "Number of active integrations using this credential.",
+          "detail": true,
+          "detail_order": 4
+        },
+        {
           "name": "credential_type",
           "label": "Credential Type",
           "fieldType": "text",
           "required": true,
-          "order": 4,
-          "info": "Type of Credential used (Classic PAT).",
+          "order": 5,
+          "info": "Type of Credential used.",
           "valueMap": {
-            "classic_pat": "Classic Personal Access Token (PAT)"
+            "token": "Token",
+            "organization": "Organization"
           },
-          "detail": false,
-          "detail_order": 4
+          "show": true,
+          "detail": true,
+          "detail_order": 5
         }
       ]
     },
@@ -222,7 +175,7 @@
       {
         "type": "update",
         "label": "Update",
-        "editableFields": ["pat_token"]
+        "editableFields": ["token", "organization"]
       },
       {
         "type": "delete",

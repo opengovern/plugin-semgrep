@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"github.com/opengovern/og-describer-semgrep/global"
 	"github.com/opengovern/og-describer-semgrep/global/maps"
@@ -36,8 +38,10 @@ func (i *Integration) HealthCheck(jsonData []byte, providerId string, labels map
 	if err != nil {
 		return false, err
 	}
-	// TODO add credentials
-	isHealthy, err := IntegrationHealthcheck(Config{})
+
+	isHealthy, err := IntegrationHealthcheck(Config{
+		Token: credentials.Token,
+	})
 
 	return isHealthy, err
 }
@@ -49,8 +53,18 @@ func (i *Integration) DiscoverIntegrations(jsonData []byte) ([]integration.Integ
 		return nil, err
 	}
 	var integrations []integration.Integration
-	// TODO
-	_, err = IntegrationDiscovery(Config{})
+
+	_, err = IntegrationHealthcheck(Config{
+		Token: credentials.Token,
+	})
+	if err != nil {
+		return nil, err
+	}
+	providerID := hashSHA256(credentials.Token)
+	integrations = append(integrations, integration.Integration{
+		ProviderID: providerID,
+		Name:       credentials.Organization,
+	})
 
 	return integrations, nil
 }
@@ -99,4 +113,13 @@ func (i *Integration) ListAllTables() (map[string][]interfaces.CloudQLColumn, er
 
 func (i *Integration) Ping() error {
 	return nil
+}
+
+func hashSHA256(input string) string {
+	hash := sha256.New()
+
+	hash.Write([]byte(input))
+
+	hashedBytes := hash.Sum(nil)
+	return hex.EncodeToString(hashedBytes)
 }

@@ -9,5 +9,6 @@ const (
 )
 
 type IntegrationCredentials struct {
-	// TODO
+	Token        string `json:"token"`
+	Organization string `json:"organization"`
 }

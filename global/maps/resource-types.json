@@ -1,24 +1,37 @@
 [
  {
-   "ResourceName": "Github/Artifact/DockerFile",
-   "Tags": {
-     "category": ["artifact_dockerfile"]
-   },
-   "ListDescriber": "DescribeByIntegration(describers.ListType)",
+   "ResourceName": "Semgrep/Deployment",
+   "ListDescriber": "DescribeListBySemGrep(describers.ListDeployments)",
    "GetDescriber": "",
-   "SteampipeTable": "template_artifact_dockerfile",
-   "Model": "ArtifactDockerFile",
-   "Params": [
-     {
-       "Name": "repository",
-       "Description": "Please provide the repo name (i.e. internal-tools)",
-       "Required": false
-     },
-     {
-       "Name": "organization",
-       "Description": "Please provide the organization name",
-       "Required": false
-     }
-   ]
- }
+   "SteampipeTable": "semgrep_deployment",
+   "Model": "Deployment"
+ },
+  {
+    "ResourceName": "Semgrep/Project",
+    "ListDescriber": "DescribeListBySemGrep(describers.ListProjects)",
+    "GetDescriber": "",
+    "SteampipeTable": "semgrep_project",
+    "Model": "Project"
+  },
+  {
+    "ResourceName": "Semgrep/Policy",
+    "ListDescriber": "DescribeListBySemGrep(describers.ListPolicies)",
+    "GetDescriber": "",
+    "SteampipeTable": "semgrep_policy",
+    "Model": "Policy"
+  },
+  {
+    "ResourceName": "Semgrep/Scan",
+    "ListDescriber": "DescribeListBySemGrep(describers.ListScans)",
+    "GetDescriber": "",
+    "SteampipeTable": "semgrep_scan",
+    "Model": "Scan"
+  },
+  {
+    "ResourceName": "Semgrep/Finding",
+    "ListDescriber": "DescribeListBySemGrep(describers.ListFindings)",
+    "GetDescriber": "",
+    "SteampipeTable": "semgrep_finding",
+    "Model": "Finding"
+  }
 ]
