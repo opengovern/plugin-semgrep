@@ -1,5 +1,5 @@
-IntegrationType: template 
-DescriberURL:  ghcr.io/opengovern/og-describer-template
+IntegrationType: semgrep
+DescriberURL:  ghcr.io/opengovern/og-describer-semgrep
 Publisher: opencomply.io
 Author : opencomply engineering team
 SupportedPlatformVersion: 2.x.x

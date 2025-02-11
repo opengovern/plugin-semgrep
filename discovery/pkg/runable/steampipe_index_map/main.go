@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/opengovern/og-describer-template/global"
+	"github.com/opengovern/og-describer-semgrep/global"
 	"os"
 	"strings"
 )

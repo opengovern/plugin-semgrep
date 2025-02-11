@@ -1,4 +1,4 @@
-module github.com/opengovern/og-describer-template
+module github.com/opengovern/og-describer-semgrep
 
 go 1.23.3
 

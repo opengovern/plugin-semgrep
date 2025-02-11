@@ -1,4 +1,4 @@
-package describers
+package provider
 
 import (
 	"context"
