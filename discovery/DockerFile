@@ -3,6 +3,6 @@ RUN apk --no-cache add ca-certificates
 
 FROM scratch
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY ./local/og-describer-template ./
+COPY ./local/og-describer-semgrep ./
 ENTRYPOINT [ "./og-describer-semgrep" ]
 CMD [ "./og-describer-semgrep" ]
