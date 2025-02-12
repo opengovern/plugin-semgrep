@@ -1,4 +1,4 @@
-IntegrationType: semgrep
+IntegrationType: semgrep_account
 DescriberURL:  ghcr.io/opengovern/og-describer-semgrep
 Publisher: opencomply.io
 Author : opencomply engineering team
